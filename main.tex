@@ -1,0 +1,142 @@
+%!TEX root = ./main.tex
+
+\documentclass[11pt, a4paper, titlepage, slovak]{book}
+
+%Includes all neccessary packets and contains some useful commands
+\include{i10preamble}
+
+% zalamovanie slov
+%Hyphenation patterns
+%\hyphenation{
+%dieseswortwirdnichtgetrennt
+%diesesauchnicht
+%thiswordwillstayinoneline
+%thistoo
+%}
+
+
+%--------------------------------------------------------------
+\begin{document}
+
+% allow more flexible whitespaces to avoid hyphenation and overfull hboxes
+\sloppy %lepsi algoritmus na zalamovanie riadkov
+
+% 'see'-entries for the index
+\include{indexAddOn}
+
+
+%--------------------------------------------------------------
+% uvodne strany... obal, titulka, abstrakt, uvod, ...
+%--------------------------------------------------------------
+\frontmatter
+
+%use the titlepage from the 'images' directory 
+\newgeometry{rmargin=20mm}
+\begin{titlepage}
+% centrovanie
+\begin{center}                                                                                                                                                   
+{\Large Slovenská technická univerzita v Bratislave} \\
+{\Large Fakulta informatiky a informačných technológií} \\
+\vspace*{1\baselineskip}
+\large {Evidenčné číslo}
+\vfill % vert. plnenie prazdnymi medzerami                                                                                                                                                                    
+
+
+{\LARGE {Matúš Cimerman}} \\
+\vspace*{1\baselineskip}
+{\huge \uppercase {Data Stream Analysis}} % nadpis
+\\
+\vspace*{1\baselineskip}
+{\Large {Bakalárska práca}}\\
+\vfill %vert. plnenie
+\end{center}
+% end centrovanie
+{Vedúci práce: Ing. Jakub Ševcech}\\
+\vspace*{1\baselineskip}
+{May 2015}
+
+\end{titlepage}
+\restoregeometry
+\thispagestyle{empty}
+\emptydoublepage
+
+%\include{declarationofownwork}
+%\emptydoublepage
+
+%the abstract should include an english and a slovak version
+\include{abstract}
+\emptydoublepage
+
+%acknowledgements
+\include{acknowledgements}
+\emptydoublepage
+
+%conventions applied in the thesis
+%\include{conventions}
+%\emptydoublepage
+
+\tableofcontents
+\emptydoublepage
+%
+\listoffigures
+\emptydoublepage
+%
+\listoftables
+\emptydoublepage
+
+
+%--------------------------------------------------------------
+% hlavny obsah
+%--------------------------------------------------------------
+\mainmatter
+
+\include{introduction}
+\emptydoublepage
+\include{overview}
+\emptydoublepage
+\include{solutions}
+\emptydoublepage
+\include{method}
+\emptydoublepage
+\include{implementation}
+\include{evaluation}
+\emptydoublepage
+\include{summaryandfuturework}
+\emptydoublepage
+
+\begin{appendix}
+\todo{Plan na druhy semester!}
+\include{appendix_01}
+\emptydoublepage
+\include{appendix_02}
+\emptydoublepage
+\end{appendix}
+
+%--------------------------------------------------------------
+% prilohy, index
+%--------------------------------------------------------------
+\backmatter
+
+%bibliography
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\protect\numberline{}Bibliography}
+\bibliography{thesis}
+\emptydoublepage
+
+%index
+%\markboth{Index}{Index}
+%\thispagestyle{plain}
+%\phantomsection
+%\addcontentsline{toc}{chapter}{\protect\numberline{}Index}
+%\printindex
+
+%date of typesetting
+\newpage
+\thispagestyle{empty}
+\vspace*{\fill}
+\hspace*{\fill}{\tiny Typeset \today}
+
+%--------------------------------------------------------------
+\end{document}
+
