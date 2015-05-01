@@ -1,11 +1,25 @@
-%!TEX root = ./main.tex
-%
-% This file is part of the i10 thesis template developed and used by the
-% Media Computing Group at RWTH Aachen University.
-% The current version of this template can be obtained at
-% <http://www.media.informatik.rwth-aachen.de/karrer.html>.
-
-\chapter{Existujúce riešenia pre spracovanie a anlýzu prúdu údajov}
+\chapter{Existujúce riešenia modelov spracovania údajov}
 \label{Existing solutions of data stream analysis} 
+V tejto kapitole bližšie rozoberieme existujúce riešenia, ktoré sme analyzovali. Zamerali sme sa najmä na riešenia, ktoré nie sú proprietárne a čo najviac spĺňajú naše požiadavky na prúdové spracovanie údajov.
 
-%\mnote{Beginning: This is a margin note that---hopefully---spans multiple lines so I can see if it fits in well with the rest of the text.} 
+%%%%%%%%%%%%% DAVKOVE %%%%%%%%%%%%%
+\section{Dávkové spracovanie}
+\paragraph{Apache Hadoop} je open-source implementácia MapReduce programovacieho modelu. Hadoop pozostáva z dvoch základných komponentov: \textit{Distribuovaný Súborový Systém Hadoop} (angl. Hadoop Distributed File System) a \textit{MapReduce programovacieho rámca} \citep{liu2014survey}.
+
+%%%%%%%%%%%%%% PRUDOVE %%%%%%%%%%%%
+\section{Prúdové spracovanie}
+\paragraph{S4}
+Skratka S4 znamená \textit{Jednoduchý Škálovateľný Prúdový Systém} (angl. Simple Scalable Streaming System), tento systém je založený čiastočne na modely MapReduce. S4 je všeobecná, distribuovaná a škálovateľná platforma, ktorá je čiastočne odolná voči chybám. Napríklad, ak spracujúci uzol v topológií vypadne kvôli chybe, spracovanie je automaticky presunuté na iný uzol, ale stav toho uzla je stretený a nemôže byť obnovený \citep{neumeyer2010s4}. Tento systém nepoužíva zdieľanú pamäť a je založený na modeli Hráčov (angl. Actor model) \citep{agha1985actors}. S4 má decentralizovanú symetrickú architektúru, v ktorej sú všetky uzly na rovnakej úrovni (rozdiel oproti master-slave architektúre). Tieto uzly sú nazývané \textit{spracujúce elementy} (angl. processing elements, ďalej len PEs). S4 si vymieňa informácie medzi PEs vo forme dátových udalostí, čo je aj jediná možnosť interakcie a výmeny informácií medzi PEs. Strapec (angl. cluster) S4 pozostáva z PEs na spracovanie týchto udalostí. Vzhľadom na to, že dáta prúdia medzi PEs nie je potrebné ukladanie na disk. Z čoho tiež vyplýva, už spomenutá, čiastočná odolnosť voči chybám \citep{liu2014survey}. 
+
+\paragraph{Spark}
+Spark \citep{Spark} clustrový výpočtový systém. Cieľom Spark-u je poskytnúť rýchlu výpočtovú platformu pre analýzu dát. Spark poskytuje všeobecný model výkonávania ľubovolných dopytov, ktoré sú výkonávané v pamäti. Takže opäť nie je potreba ukladať dáta počas spracovania na disk, čo by mohlo mať za následok nežiadúce spomalenie aplikácie. 
+
+\section{IBM InfoSphere Streams}
+
+\section{Storm}
+Strom je programovací rámec vytvorený na spracovanie prúdu dát. Je to open-source riešenie, ktoré poskytuje spracovanie prúdu dát s nízkou odozvou. Storm pozostáva z viacerých častí vrátane koordinátora (ZooKeeper), manažéra stavov (Nimbus) a spracovávajúcich uzlov (Supervisor). Implementuje model kde dáta neustále prúdia sieťou, tiež nazývanou topológiou uzlov a ústí. Topológia väčšinou záčína ústím a ďalej nasledujú len uzly, ktoré spracujú dáta a posielajú ich ďalej na spracovanie. Abstrakcia nad prúdiacimi údajmi sa v skratke nazýva \textit{prúd} \citep{liu2014survey}, čo je neohraničená sekvencia n-tíc.
+
+
+\begin{shaded}
+***TODO: Porovnanie existujucich rieseni a odovodnenie preco som sa rozhodol prave pre storm***
+\end{shaded}

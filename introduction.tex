@@ -6,6 +6,19 @@
 % <http://www.media.informatik.rwth-aachen.de/karrer.html>.
 
 \chapter{Úvod}
-%\label{introduction}
-\todo{napisat uvod} 
+V ostatnom čase si téma spracovania prúdu údajov v kontexte veľkého objemu dát (angl. Big Data) vyžaduje stále väčšiu pozornosť. Čím ďalej, sa vo viacerých doménach stretávame s problémom spracovania narastajúceho objemu údajov, ktoré sú rozmanité. Tradičné prístupy Obchodných informácií (angl. Business intelligence) nie sú postačujúce pri riešení týchto problémov. \citep{liu2014survey}.\par
+
+Spracovanie Big Data sa stáva dôležitou časťou stále väčšieho množstva odvetví. Či už ide o veľkých telekomunikačných operátorov, komerčné podniky, vyhľadávače alebo sociálne média, všade sa stretávame s big data. Značným zdrojom dát sú v dnešnej dobe senzory, ktoré nachádzame stále častejšie v zariadeniach, ktoré sú súčasťou bežného života dnes. Chytré telefóny a hodinky, športové náramky, či vo všeobecnosti Internet vecí (angl. Internet of Things\footnote{TODO: Odkaz, na wiki?}) zmenšuje priepasť medzi svetom fyzických zariadení a prepojení s internetom. Napríklad šesť hodinový medzištátny let Boeingu 737 z New Yorku do Los Angeles vygeneruje počas letu celkovo 240 terabajtov dát\citep{boeing}. Takéto rýchlo vznikajúce dáta, ktoré prúdia vo veľkých objemoch nazývame prúd dát alebo údajov (angl. data stream).
+\par
+Preto stúpa motivácia a význam vybudovať infraštruktúru, ktorá bude schopná spracovať takýto masívny objem prúdiadich dáť v reálnom čase. Existuje veľa aplikácií, ktorých správne fungovanie môže byť kritické vzhľadom na správnosť výsledku z súvislého a nekonečného prúdu dát. Ako príklad môžme uviesť letové údaje zo senzorov lietadla Boeing 737 alebo analýza trendov na sociálnej sieti Twitter\footnote{http://www.twitter.com/}. Keby sme takýto prúd spracovali tradičným prístupom spracovania Big Data, dávkovým spracovaním, mohlo by to mať kritický dopad na výsledký aplikácie. V prípade Boeingu 737 je jasné, že aplikácia musí poskytnúť výsledky v takmer reálnom čase, inak to môže mať katastrofické dopady. Pri analýze trendov na sociálnej sieti Twitter je veľmi pravdepodobné\citep{mathioudakis2010twittermonitor}, že sa v spracovanej dávke dát stratí trend, ktorý je aktuálny iba pre krátky časový úsek. Preto je dáta potrebné spracovávať okamžite po vstupe do aplikácie.
+\begin{shaded}
+***TODO: Vysvetlit pojem real-time ako ho v tejto praci budeme chapat uz v uvode?***
+\end{shaded}
+\par
+V našej práci sa venujeme spracovaniu prúdu dát. Cieľom práce je návrh a implementácia metódy, ktorá takéto prúdy dát dokáže efektívne spracovať. Práca je štrukturovaná do troch logických celkov. 
+\begin{shaded}
+***TODO: Doplnit podla finalnej presnej struktury. Opisat klasicke rozdelenie zaverecnej prace - namapovat na moje a zdovodnit preco som moju pracu inak strukturoval.***
+\end{shaded}
+Analyzujeme a sledujeme vlasnosti tejto navrhnutej metódy v porovnaní s klasickými prústupmi k spracovaniu big data.
+
 
