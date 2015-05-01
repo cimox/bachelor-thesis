@@ -1,0 +1,119 @@
+\chapter{Modely spracovania údajov}
+\label{Data streams overview and processing methods}
+V tejto kapitole sa venujeme metódam, či prístupom k spracovaniu veľkého objemu údajov (angl. Big Data). Dávkové spracovanie je jednou z najčastejšie používaných metód spracovania big data, ale jej použitie zlyhýva v aplikáciach, pri ktorých môže byť čas odozvy kritický. Môžu to byť napríklad aplikácia, ktorá spracuje údaje zo senzorov lietadla alebo aplikácia na analýzu trendov na sociálnej sieti. Z tohto dôvodu v tejto kapitole porovnávame dva prístupy spracovania big data, \textit{dávkové spracovanie} (angl. batch processing) a \textit{prúdové spracovanie} (angl. stream processing), pričom druhá metóda hovorí, ako to vyplýva z názvu, o spracovaní prúdu dát.
+\par
+Najskôr je potrebné čo najpresnejšie definovať, čo je to prúd údajov. Prúd údajov môže naberať iný význam v závilosti na zdroji týchto údajov. Vo všeobecnosti, je ale prúd dát, potenciálne nekonečný a nijak ohraničený tok dát v pohybe. Takýto prúd má tri význačné vlastnosti, veľký \textit{objem} (angl. volume), vysokú \textit{premenlivosť} (angl. velocity) a \textit{pestrosť} (angl. variety) prúdiacich správ za jednotku času\citep{kaisler2013big}. Pre priblíženie, objem sa pohybuje rádovo v stovkách tisícov správ za sekundu. Ako príklad môžme uviesť aktivitu na sociálnej sieti Twitter, ktorá presahuje 50 milionóv nových správ (tweetov) za jeden deň\citep{mathioudakis2010twittermonitor}.
+\par
+Najčastejšie zdroje takýchto dát, ktoré vyžadujú prúdové spracovanie dát v reálnom čase pre dosiahnutie hodnotných výstupov:
+\begin{itemize}
+    \item \textit{sociálne média} ako napríklad Twitter, či Facebook produkujú masívny objem dát v reálnom čase, ktoré strácajú svoju informačnú hodnotu veľmi rýchlo.
+    \item \textit{údaje z logovacích súborov}, webové servery, databázy a rozne iné zariadenia produkujú súbory, do ktorých sú ukladané logy.
+    \item \textit{sieťové zariadenia alebo prvky} kontinuálne generujú hodnotné dáta v obrovských objemoch, tiež v závislosti na veľkosti siete.
+    \item \textit{senzory a snímače}, ktoré môžu merať fyzikálne veličiny.
+\end{itemize} 
+Takéto prúdy má zmysel spracovať v reálnom čase, aby sme dosiahli hodnotné výstupy. Spracovanie v reálnom čase sa môže opäť meniť v kontexte problému. V našom prípade to bude najčastejšie znamenať, že správnosť výsledku nebude závislá iba na jeho správnosti, ale aj na čase za aký bude poskytnutý \citep{stankovic1999misconceptions}. \\
+
+Pre získanie hodnotného výstupu na základe dopytu používateľa je nutné vykonať operáciu nad všetkými dostupnými dátami\citep[s. 8-10]{marz2013big}.
+\begin{center}
+\textit{dopyt = fn(všetky dáta, ktoré sú k dispozícií)}
+\end{center}
+
+% Vlastnosti systemu na spracovanie big data
+%\paragraph{Žiadúce vlastnosti architektúry na spracovanie veľkého objemu dát}
+Pri navrhovaní architektúry softvérového systému, ktorá ma za úlohu spracovať veľký objem dát je nevyhnutné aby spĺňala aspoň tieto nasledujúce vlastnosti:
+\begin{enumerate}
+    \item \textit{robustná a odolná voči chybám}, architektúra je robustná, ak bez chyby odolá nečakaným stavom, ako napríklad výpadok elektrickej energie. Je odolná voči chybám, ak chybné dáta alebo strata dát nemá za následok poškodený výstup.
+    \item \textit{nízka odozva}, aplikácie postavené na tejto architektúre sú schopné poskytnúť odozvu v požadovanom čase. Typicky rádovo desiatky, maximálne stovky milisekúnd.
+    \item \textit{horizontálne škálovateľná}, ak je možné zvýšiť výkon celej architektúry pridaním fyzického uzla bez dopadu na funkcionalitu.
+    \item \textit{všeobecná}, architektúru je možné použiť na rôzne aplikácie.
+    \item \textit{rozšíriteľná}, do fungujúcej architektúry je možné pridávať novú funkcionalitu za prijateľnej námahy.
+\end{enumerate}
+
+
+
+
+%\section{Tradičné prístupy k spracovaniu dát}
+%\textbf{TODO: spracovanie prudu tradicnym pristupom pomocou relacnych databaz - najprv ulozit data a potom snimi pracovat }
+
+
+% DAVKOVE SPRACOVANIE %
+\section{Dávkové spracovanie veľkého objemu dát}
+Dávkové spracovanie veľkého objemu dát funguje na príncipe, ako napovedá názov, spracovania dát v dávkach. Nespracujú sa všetky dáta naraz, alebo postupne ako vznikajú, ale v istých dávkach. Tieto dávky môžu byť rozne veľké. Môžu byť ohraničené časovo alebo veľkosťou. Najčastejší prístup je vytvárať dávky na spracovanie po nejakých časových intervaloch, napríklad každých sedem hodín. Znamená to, že po dobu sedem hodín niekam akumulujeme nové dáta. Po uplynutí tohto času je nad týmito dátami a všetkými, ktoré boli doteraz zaznamenané, vykonaná nejaká operácia (napríklad priemer čísel) a jej výsledok je uložený vo forme \textit{pohľadu}. \\
+
+\myFrameBigFigure[]{davkove.eps}{Obrázok zobrazuje dávkové spracovanie dát, pričom na pravej strane sú vytvárané rôzne pohľady.}{Dávkové sprac. dát}
+S takýmto prístupom bude len veľmi ťažké dosiahnut nízku odozvu na dopyt používateľa. Nakoľko minimálne v jednom momente bude \textit{pohľad} sedem hodín neaktuálny. Tomuto by sa teoreticky dalo zabrániť rapídnym znížením časového intervalu.
+\par
+Pri tomto prístupe sú všetky dáta ukladané do databázy, tak ako prišli. Nie sú vôbec modifikované, takže sa pracuje s čistými dátami. Súbor dát, ktorý uchovávame môže byť preto veľmi objemný, rádovo terabajty. To znamená, že každé spracovanie dávky je časovo a výpočtovo náročná operácia a môže niekedy trvať aj celé hodiny. 
+\par 
+Nami poskytnuté teoretické riešenie ako sa vyhnúť vysokej odozve znížením časového intervalu, po ktorom je vykonané dávkové spracovanie, by nebolo riešením.
+To čo sa môže zdať ako nevýhoda, je zároveň aj výhoda, pretože ukladaním všetkých dát dosahujeme odolnosť voči chybám (aj spôsobným človekom) a pri vytváraní pohľadu zohľadňujeme údaje z minulosti. 
+\par
+Dávkové spracovanie dát nám poskytuje distribuované a spoľahlivé (tj. odolné voči chybám) riešenie. Tento prístup tiež poskytuje škálovateľnosť, je dostatočne všeobecný a rozšíriteľný. Avšak neposkytuje nízku odovzu. Nasledujúci zoznam hovorí o najdôležitejších vlastnostiach dávkového spracovania:
+\begin{enumerate}
+    \item \textit{neohraničené počítanie}, znamená že máme teoreticky neobmedzenú výpočtovú silu a neobmedzený čas výpočtu. Teoreticky môžeme vykonať dávkové spracovanie nad akýmkoľvek dátovým súborom.
+    \item \textit{ukladanie normalizovaných dát}, neexistuje potreba dáta denormalizovať, pretože pohľady sú generované často.
+    \item \textit{architektúra je horizontálne škálovateľná}.
+%    \item \textit{vykonáva len zápis}, žiadne dáta sa nie sú vymazané.
+    \item \textit{dáta sú konzistentné}, za predpokladu, že vstupné dáta sú korektné.
+\end{enumerate}
+
+\subsection{Metódy dávkového spracovania}
+\paragraph{MapReduce} je programovací model a príslušná implementácia na spracovanie a generovanie masívnych údajových korpusov \citep{Dean2008}. Tento model bol vymyslený kvôli výpočtovej zložitosti a problému distribuovať a paralelizovať výpočet. Je založený na primitívach prezentovaných v programovacom jazyku Lisp, \textit{mapovanie} a \textit{filtrovanie}. Výpočet je vykonávaný za použitia len týchto dvoch funkcií. Funkcia \textit{mapovanie} má ako vstupný argument dvojicu \textit{kľúč/hodnota} s kľúčom \textit{K}, nad ktorou spraví používateľom definovanú operáciu, a vytvorí dočasnú dvojicu s kľúčom \textit{K}. Túto hodnotu s kľúčom \textit{K} ďalej konzumuje funkcia \textit{filtrovanie}, ktorá najčastejšie spojí hodnoty do jednej (napríklad operácia sčítania). Ako jednoduchý príklad uvádzame problém spočítania výskytov slova vo veľkej kolekcii dokumentov \citep{Dean2008}:
+
+\paragraph{Dátové kocky} (angl. Data cubes)
+Dátová kocka, tiež známa pod pojmom OLAP\footnote{Online Analytical Processing} kocka, je dátová štruktúra, ktorá umožňuje rýchlu analýzu dát. Hlavná motivácia prečo vytvárať dátove kocky je materializácia všeobecných údajov. Takáto kocka má dve hlavné atribúty, \textit{dimenzia} a \textit{hodnota}. Pričom dimenzie predstavujú nezávislé hodnoty, napríklad vek a hodnota je závislá, pretože bude viazaná k veku v konkrétnom zázname. Viac rozmerný priestor je vymedzený dimenziami kocky. Nad dátovými kockami poznáme niekoľko základných operácií, \textit{krájanie} (angl. slicing), \textit{delenie} (angl. dicing), \textit{pivotovanie} (angl. pivoting), \textit{zrolovanie} (angl. roll up), \textit{drill-down}\citep{franekimporty}. 
+
+\paragraph{Hviezdicová schéma} (angl. Star schema)
+Hviezdicová schéma sa používa na modelovanie viac dimenzionálnych dát a vychádza priamo z princípov relačných databáz. Pričom priamo v tabuľke je uložených len niekoľko základných faktov a kľúčov. Tieto kĺúče ďalej odkazujú na ďalšie tabuľky, ktoré môžu odkazovať na ďalšie tabuľky\citep{chaudhuri1997overview}. Dopytovanie sa do takéjto schémy je pomerne efektívne, nakoľko nie je vždy potrebné dotazovanie vo všetkých dimenziách.
+
+\paragraph{Dátové sklady} (Datawarehouse)
+Pojem dátový sklad definoval v roku 1990 Bill Inmon. Dátovy sklad je subjektovo orientovaná, integrovaná, stála a časovo rozdielna kolekcia dát podporujúca rozhodujúce procesy\citep{chaudhuri1997overview}. Dátové sklady nám poskytujú zovšeobecnené a ustálené dáta vo viacerých dimenziách. Dátové sklady nám tiež poskytujú prostriedky ako napríklad OLAP, ktorý bol vyšie spomenutý v súvislosti s dátovými kockami. Dátove sklady sú typicky udržiavané mimo hlavnej databázy, resp. úložiska dát. 
+
+
+
+
+
+% PRUDOVE SPRACOVANIE %
+\section{Prúdové spracovanie dát}
+Správne fungovanie niektorých aplikácií je priamo závislé na takmer okamžitom výsledku z nekonečného spojitého prúdu dát. Keďže prúd je nekonečný, nové dáta prichádzajú kontinuálne a teda aj výsledky a zmeny z nich vyplývajúce. Dáta musia byť spracované tak ako prichádzajú. Spracovanie takýchto nekonečných prúdov dát aplikovaním tradičných metód môže byť problém, keďže výpočtové prostriedky sú limitované \citep{babcock2002models}. Množstvo predtým (rádovo sekundy) vygenerovaných dát je zvyčajne veľké a preto sú často po spracovaní zahadzované, ale môžu byť uložené na disku. V prípade keby sme aj chceli pristupovať k dátam z minulosti (môže byť užitočné pri detekcii trendov) bolo by to výpočtovo náročné, pretože dopyt sa musí vykonať nad všetkými doteraz uloženými dátami pre získanie jedného výstupu\citep{silvestri2006distributed}. Na tkéto uloženie sa najčastejšie používajú NoSQL databázy, pretože tradičné extrahuj-transformuj-načítaj (ETL)\footnote{extract-transformation-load} relačné databázy sú priveľmi štrukturované a pomalé \citep{liu2014survey}. Preto sa budeme zaoberať v tejto kapitole iba nástrojmi, ktoré adresujú spracovanie v takmer-reálnom čase.
+\par
+Pri prúdovom spracovaní sa stretávame s niekoľkými špecifikami:
+
+
+\paragraph{Prúd dát}
+
+\paragraph{Problémy}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

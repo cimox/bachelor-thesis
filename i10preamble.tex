@@ -217,15 +217,34 @@
 \usepackage{noindent}
 
 %change standard fonts to Palatino and Helvetica
-\usepackage{palatino}
+\usepackage{helvet}
 
 %bibliography settings
 \usepackage{natbib}
-\bibliographystyle{plainnat}
+\bibliographystyle{apalike}
+
+%source code listings
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\renewcommand{\lstlistingname}{Algoritmus}
+
+%highlits
+\usepackage{framed}
+\definecolor{shadecolor}{rgb}{0.75,0.75,0.75}
 
 %citation commands
 \newcommand{\fullcite}{\citep} %for "Author [1980]"
 \renewcommand{\citeyear}{\citeyearpar} %for "[1980]"
+
+\usepackage{setspace}
+%\doublespacing
+\onehalfspacing
+
 
 %package for control structures
 \usepackage{ifthen}
@@ -270,6 +289,8 @@
 %creating a better way to change the layout for the abstract pages
 \usepackage{geometry}
 
+\titlespacing*{\chapter}{0pt}{0pt}{25pt}
+
 \ifthenelse{\lengthtest{\paperheight=250mm}}%
 {% -----------------B5 Layout-----------------
 % Page layout
@@ -295,12 +316,12 @@
 			twoside,
 			includemp,
 			includehead,
-			top = 30mm,
+			top = 20mm,
 			headsep = 10mm,
 			bindingoffset = 0mm,
 			inner = 40mm,
-			outer = 20mm,
-			bottom = 45mm,
+			outer = 30mm,
+			bottom = 30mm,
 			marginparsep = 0mm,
 			marginparwidth = 0mm
 }
@@ -313,6 +334,7 @@
 }
 \savegeometry{myAbstract}
 \loadgeometry{myText}
+
 
 \newlength{\fullwidth} % Width of text plus margin notes
 \setlength{\fullwidth}{\textwidth}
@@ -425,6 +447,8 @@
 %-----------------------------------------------------------------------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------------
+\renewcommand{\figurename}{Obrázok}
+
 % \myBigFigure	[ LABEL_PREFIX (optional) ]
 %				{ FILENAME (without extension) }
 %				{ CAPTION TEXT }

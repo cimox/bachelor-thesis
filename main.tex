@@ -11,6 +11,8 @@ Twitter
 Twittru
 map-reduce
 oblastiach
+korpusov
+processing
 }
 
 
@@ -40,19 +42,53 @@ oblastiach
 \large {Evidenčné číslo}
 \vfill % vert. plnenie prazdnymi medzerami                                                                                                                                                                    
 
+\newpage
 
-{\LARGE {Matúš Cimerman}} \\
+{{Matúš Cimerman}} \\
 \vspace*{1\baselineskip}
-{\huge {Analýza prúdu údajov}} % nadpis
+{\huge {\textbf{Analýza prúdu údajov}}} % nadpis
+%{\huge {Analýza prúdu údajov}} % nadpis
 \\
 \vspace*{1\baselineskip}
-{\Large {Bakalárska práca}}\\
+%{\Large {Bakalárska práca}}\\
+\textit{Bakalárska práca}\\
 \vfill %vert. plnenie
 \end{center}
 % end centrovanie
 {Vedúci práce: Ing. Jakub Ševcech}\\
+\\
+%\vspace*{1\baselineskip}
+{december, 2014}
+\end{titlepage}
+\emptydoublepage
+
+\begin{titlepage}
+% centrovanie
+\begin{center}                                                                                                                                                   
+{\Large Slovenská technická univerzita v Bratislave} \\
+{\Large Fakulta informatiky a informačných technológií} \\
 \vspace*{1\baselineskip}
-{máj 2015}
+\large {Evidenčné číslo}
+\vfill % vert. plnenie prazdnymi medzerami                                                                                                                                                                    
+
+
+{{Matúš Cimerman}} \\
+\vspace*{1\baselineskip}
+{\huge {\textbf{Analýza prúdu údajov}}} % nadpis
+%{\huge {Analýza prúdu údajov}} % nadpis
+\\
+\vspace*{1\baselineskip}
+%{\Large {Bakalárska práca}}\\
+\textit{Bakalárska práca}\\
+\vfill %vert. plnenie
+\end{center}
+% end centrovanie
+{Študijný program: Informatika}\\
+{Študijný odbor: 9.2.1 Informatika}\\
+{Miesto vypracovania: Ústav informatiky a softvérového inžinierstva, FIIT STU Bratislava}\\
+{Vedúci práce: Ing. Jakub Ševcech}\\
+\\
+{december, 2014}
 
 \end{titlepage}
 \restoregeometry
@@ -75,8 +111,11 @@ oblastiach
 %\emptydoublepage
 
 \renewcommand{\contentsname}{Obsah}
+\singlespacing
 \tableofcontents
 \emptydoublepage
+\onehalfspacing
+%\doublespacing
 %
 %\listoffigures
 %\emptydoublepage
@@ -92,7 +131,7 @@ oblastiach
 
 \include{introduction}
 \emptydoublepage
-\include{overview}
+\include{methods}
 \emptydoublepage
 \include{solutions}
 \emptydoublepage
@@ -107,8 +146,8 @@ oblastiach
 \begin{appendix}
 \include{appendix_01}
 \emptydoublepage
-\include{appendix_02}
-\emptydoublepage
+%\include{appendix_02}
+%\emptydoublepage
 \end{appendix}
 
 %--------------------------------------------------------------
@@ -119,7 +158,8 @@ oblastiach
 %bibliography
 \clearpage
 \phantomsection
-\addcontentsline{toc}{chapter}{\protect\numberline{}Bibliography}
+\addcontentsline{toc}{chapter}{\protect\numberline{}Literatúra}
+\renewcommand{\bibname}{Literatúra}
 \bibliography{thesis}
 \emptydoublepage
 

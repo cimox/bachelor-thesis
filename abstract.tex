@@ -6,23 +6,45 @@
 % <http://www.media.informatik.rwth-aachen.de/karrer.html>.
 
 \loadgeometry{myAbstract}
-
-\chapter*{Abstract\markboth{Abstract}{Abstract}}
-%\addcontentsline{toc}{chapter}{\protect\numberline{}Abstract}
-\label{abstract}
-
-%english version
-Nowadays we can see Big Data processing and analysis in many domains. As a amounts of data growing, more people are focusing on this problem. The most affected domains are social media websites like Facebook or Twitter. A data from such a sources are streaming in huge amounts and changing in real-time, called data streams. We want to process and analyze data streams in real-time to provide users personalized and valuable outputs. The most common approach to handle data streams is map-reduce paradigm, e.g. batch data processing. Proposed methods are not meeting our requirement to process data streams in real-time. To achieve these requirements, we need use different approach called data stream processing which is built on Lambda Architecture.\\
-Processing and analysis of big data streams is a complex task, because we need to provide low-latency, scalable and fault-tolerant solution. In our project, we analyze existing solutions and frameworks to analyze data streams. We provide verification of its characteristics in different kind of tasks. Accordingly to this, we propose a application for processing and analyzing big data streams (e.g. Twitter data stream), which allows users to get valuable outputs changing in real-time.\\
-\todo{upravit anglicku podla slovenskej. V slovenskej su male upravy...- az po revizii slovenskej}
-\emptydoublepage
-\chapter*{Abstrakt\markboth{Abstrakt}{Abstrakt}}
+\chapter*{Anotácia\markboth{Abstrakt}{Abstrakt}}
 %\addcontentsline{toc}{chapter}{\protect\numberline{}Abstrakt}
 \label{abstrakt}
+\begin{center}
+\textbf{Fakulta Informatiky a Informačných Technológií}\\
+\textbf{Slovenská Technická Univerzita}\\
+\end{center}
+\begin{tabular}{ p{15em} p{15em} }
+Meno: & Matúš Cimerman\\
+Vedúci bakalárskej práce: & Ing. Jakub Ševcech\\
+Bakalárska práca: & Analýza prúdu údajov\\
+Študijný program: & Informatika\\
+December 2014
+\end{tabular}
+
 %slovak version
-Dnes sa stretávame so spracovaním a analýzou veľkého objemu dát v mnohých oblastiach. S narastajúcim objemom dát rastie aj záujem o tento problem spracovania veľkého objemu dát. Toto najviac postihuje oblasť sociálnych medií, napríklad Facebook, či Twitter. Dáta z takýchto zdrojov prúdia v obrovkých množstvách, pričom dáta sa v čase menia, takéto prúdiace dáta nazývame jednoducho prúd dát. Prúdy dát chceme spracovať a analyzovat v reálnom čase, aby sme mohli ponúknuť používateľom personalizovaný a hodnotný výstup. Najčastejší prístup spracovania prúdu dát je map-reduce paradigma, napríklad dávkové spracovanie. Táto metóda, ale nespĺňa naše požiadavky na spracovanie dát v reálnom čase. Na dosiahnutie našej požiadavky potrebujeme iný prístup, ktorý nazývame spracovanie prúdu dát. Metóda takéhoto prístupu je postavená na Lambda architektúre.
-Spracovanie a analýza veľkých prúdov dát je komplexný problém, pretože prúd musí byť spracovaný s nízkou odozvou, riešenie musí byť odolné proti chybám a  škálovateľné. V našej práci budeme analyzovať existujúce riešenia and rámce na analýzu prúdu dát. Poskytujeme overenie charakteristík týchto riešení v roznych problémoch, ktoré si vyžadujú spracovanie prúdu dát v reálnom čase. Na základe tohto poskytujeme aplikáciu, ktorá spracuje a analyzuje veľký prúd dát (napríklad prúd dát Twittru), ktorá umožní používateľom získať hodnotný výstup, ktorý sa mení v reálnom čase.\\
-\todo{zrevidovat slovensku verziu}
-%Slovenska verzia.
+Dnes sa stretávame so spracovaním a analýzou veľkého objemu dát (angl. Big Data) v mnohých oblastiach. S narastajúcim objemom dát rastie aj záujem o túto problematiku. Toto sa najviac dotýka oblastí kde je potrebné spracovávať dáta zo senzorov, sietí telekomunikačných operátorov, ale tiež sociálnych medií ako napríklad Twitter. Dáta z týchto zdrojov prúdia v obrovských množstvách, pričom sa v čase rýchlo menia, takéto prúdy nazývame jednoducho prúd dát. Tieto prúdy sú potenciálne nekonečné. Prúdy dát chceme spracovať a analyzovať v reálnom čase, aby sme mohli ponúknuť používateľom hodnotný výstup s čo najmenšou odozvou. Najčastejší spôsob spracovania dát je dávkové spracovanie s použítím MapReduce modelu, čo však nie je aplikovateľné pri viacerých úlohách spracovania dát. Táto metóda, ale nespĺňa naše požiadavky na spracovanie dát v reálnom čase. Na dosiahnutie našej požiadavky potrebujeme iný prístup, ktorý nazývame spracovanie prúdu dát. Jedna z paradigiem na spracovanie prúdu dát je napríklad, dátovody a filtre.
+Spracovanie a analýza veľkých prúdov dát je komplexný problém, pretože prúd musí byť spracovaný s nízkou odozvou, riešenie musí byť odolné proti chybám a  horizontálne škálovateľné. V našej práci budeme analyzovať existujúce riešenia a rámce na analýzu prúdu dát. Poskytujeme overenie charakteristík týchto riešení v roznych problémoch, ktoré si vyžadujú spracovanie prúdu dát v reálnom čase. Na základe tohto navrhujeme a implementujeme aplikáciu, ktorá spracuje a analyzuje veľký prúd dát (napríklad prúd dát Twittru), ktorá umožní používateľom získať hodnotný výstup, ktorý sa mení v reálnom čase.\\
+\emptydoublepage
+
+
+\chapter*{Annotation\markboth{Abstract}{Abstract}}
+%\addcontentsline{toc}{chapter}{\protect\numberline{}Abstract}
+\label{abstract}
+\begin{center}
+\textbf{Faculty of Informatics and Information Technology}\\
+\textbf{Slovak University of Technology}\\
+\end{center}
+\begin{tabular}{ p{10em} p{15em} }
+Name: & Matúš Cimerman\\
+Supervisor: & Ing. Jakub Ševcech\\
+Bachelor thesis: & Data stream analysis\\
+Course: & Informatics\\
+2014, December
+\end{tabular}
+
+%english version
+Nowadays we can see Big Data processing and analysis in many domains. With increasing volume of data also growing up interest in this issue. The most affected domains where it is necessary to process data from sensors, networks, telecommunications operators, but also social media such as Twitter. Data from these sources flow in large amounts, while they are rapidly changing, these streams are simply called data streams. These streams are potentially infinite.
+We want to process and analyze data streams in real-time, to provide users valuable outputs with minimal latency. The most common method of data processing is batch processing using MapReduce model, which is not applicable in variety of data processing tasks. This method is not meeting our requirements to process data streams in real-time. To achieve these requirements, we need use different approach called data stream processing. One of paradigms to process data streams is for example, pipes and filters.
+Processing and analysis of big data streams is a complex issue, because stream needs to be processed with low-latency, the solution must be fault-tolerant and horizontally scalable. In our project, we will analyze existing solutions and frameworks for analyzing data stream. We provide verification of the characteristics of these solutions in various problems, that require data stream processing in real time. Based on this, we propose and implement a application, which processing and analyzing big data streams (e.g. Twitter data stream) and allows users to get valuable outputs in real-time.\\
 \emptydoublepage
 \loadgeometry{myText}
