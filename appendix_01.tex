@@ -1,48 +1,116 @@
 %!TEX root = ./main.tex
-%
-% This file is part of the i10 thesis template developed and used by the
-% Media Computing Group at RWTH Aachen University.
-% The current version of this template can be obtained at
-% <http://www.media.informatik.rwth-aachen.de/karrer.html>.
+\label{app.01}
+\appendix
+\chapter*{Prílohy}
+\addcontentsline{toc}{chapter}{Prílohy}
+\renewcommand{\thesection}{\Alph{section}}
 
-\chapter{Plán na letný semester}
+
+% ======== DOKUMENTACIA ======= %
+\section{Technická dokumentácia}\label{p-tech-doku}
+Cieľom je navrhnúť a implementovať systém, ktorý umožní používateľovi dopytovanie do prúdu údajov z vybranej domény. Na jeho dopyt by mal poskytnúť odozvu resp. výsledok v takmer reálnom čase. Pojem reálny čas definujeme v úvode projektu. V podstate identifikujeme len jeden prípad použitia pre túto konkrétnu implementáciu: \textit{Získaj výsledok podľa dopytu}. Účastníkom v tom prípade použitia je používateľ aplikácie s ktorou sa dopytuje do prúdu udalostí (naša implementácia).
+\\[5pt]
+Program sme implementovali v Jazyku Java verzie 1.8.25, pričom aplikácia je priamo závislá od ďalších knižníc, neobsahuje žiadne grafické prostredie. Webové grafické používateľské rozhranie implementuje priamo rámec Storm na monitorovanie vykonávaných topológií v klastri. Zdrojové súbory sme rozdelily do nasledujúcich balíčkov: 
 \begin{itemize}
-    \item \textit{december}
-        \begin{enumerate}
-            \item týždeň,
-            \item týždeň, odovzdanie priebežnej verzie dokumentu.
-            \item týždeň, príprava vzorového datasetu z Twittru.
-            \item týždeň, dokončenie navrhovanej metódy.
-        \end{enumerate}
-    \item \textit{január}
-        \begin{enumerate}
-            \item týždeň, revízia metód spracovania, existujúcich riešení a navrhovanej metódy.
-            \item týždeň, revízia navrhovanej metódy a implementácia navrhovanej metódy.
-            \item týždeň, implementácia navrhovanej metódy + návrh experimentov. 
-            \item týždeň,  implementácia navrhovanej metódy + realizácia experimentov.
-        \end{enumerate}
-    \item \textit{február}
-        \begin{enumerate}
-            \item týždeň, príprava abstraktu na IIT.SRC.
-            \item týždeň, príprava príspevku na IIT.SRC.
-            \item týždeň, odoslanie príspevku na IIT.SRC.
-            \item týždeň, práca na ďalších experimentoch.
-        \end{enumerate}
-    \item \textit{marec}
-        \begin{enumerate}
-            \item týždeň, vyhodnotenie experimentov.
-            \item týždeň, revízia implementácie a experimentov.
-            \item týždeň, implementácia webovej aplikácie.
-            \item týždeň, implementácia webovej aplikácie.
-        \end{enumerate}
-    \item \textit{apríl}
-        \begin{enumerate}
-            \item týždeň, technická dokumentácia a používateľská príručka.
-            \item týždeň, technická dokumentácia a používateľská príručka.
-            \item týždeň, revízia dokumentu.
-            \item týždeň, azda IIT.SRC
-        \end{enumerate}                        
+	\item \textit{bolt} - obsahuje skruty (bolty) topológie, teda hlavnú logiku,
+	\item \textit{builder} - obsahuje triedu zodpovednú za konštrukciu topológie,
+	\item \textit{scheme} - prispôsobené schémy (potrebné pre vytvorenie niektorých prameňov),
+	\item \textit{spout} - prispôsobené pramene topológie,
+	\item \textit{util} - pomocné triedy.
 \end{itemize}
 
-\label{app.01}
+Zoznam použitých nástrojov a ich verzií je v tabuľke \ref{tab-verziel}. Rámce a knižnice, ktoré sú potrebné pre aplikáciu sú získané prostredníctvom závislostí nástrojom Maven.
+Diagram tried rámca Storm je zobrazený na obrázku 2, diagram na obrázku 3 zobrazuje najdôležitejšie vzťahy tried. Vo fáze overovania výrobku sme testovali na počítači v lokálnom klastri s parametrami v tabuľke \ref{tab-param}. Proces testovania je zobrazný v diagrame na obr. 1.
+\renewcommand\tablename{Tabuľka}
+% ===== VERZIE ===== %
+\begin{table}[!htp]
+\centering
+\begin{tabular}{|r|l|}
+\hline
+\textbf{Nástroj} & \textbf{Verzia} \\ \hline
+Apache Storm & 0.9.4 \\ \hline
+Apache Kafka & 0.8.2.1 \\ \hline
+Redis & 2.8.19 \\ \hline
+ZooKeeper & 3.4.6 \\ \hline
+Java & 1.8.25 \\ \hline
+Ruby & jruby 1.7.19 (1.9.3p551) \\ \hline
+twitter4j & 4.0.3 \\ \hline
+org.json & 20141113 \\ \hline
+\end{tabular}
+\caption{Verzie použitých nástrojov, programovacích jazykov a rámcov.}
+\label{tab-verziel}
+\end{table}
+
+% ===== PARAMETRE PC ===== %
+\begin{table}[h!tbp]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Objekt} & \textbf{Parametre} \\ \hline
+Názov & MacBook Pro Late 2013 \\ \hline
+Operačný systém & OS X Yosemite 10.10.3 \\ \hline
+Procesor & 2 x 2,4 GHz, Intel Core i5 \\ \hline
+Hlavná pamäť & 8GB \\ \hline
+\end{tabular}
+\caption{Parametre počítača v lokálnom klastri.}
+\label{tab-param}
+\end{table}
+
+\myFigure{images/tech-testovanie-proces}{Proces testovania.}{test-dia}{0.925}{h!}\label{fig:tech-test-proc}
+% diagram tried storm
+\myFigure{images/tech-storm-class}{Diagram tried rámca storm. Prevzaté z http://blog.zenika.com/.}{tech-storm-class}{0.75}{h!}\label{fig:tech-storm-class}
+\label{fig:tech-moj-class}
+\myFigure{images/tech-moj-diagram}{Diagram tried.}{moj-diag-class}{0.82}{h!}
+
+
+
+% ======== PRIRUCKY ======= %
+%\emptydoublepage
+\emptysinglepage
+\section{Inštalačná a používateľská príručka}
+Na spustenie programu na lokálnom klastri je potrebné najprv spustiť niekoľko iných systémov, tieto systémy su obsiahnuté na elektronickom médiu a sú potrebné pre spustenie aplikácie:
+\begin{enumerate}
+	\item \textit{./zookeeper-server-start.sh ../config/zookeeper.properties} pre štart ZooKeeper,
+	\item \textit{./kafka-server-start.sh ../config/server.properties} pre štart Kafka,
+	\item \textit{redis-server} Redis kľúč-hodnota databáza,
+	\item \textit{./script/import.rb N dataset.in} simulácia prúdu dát, kde N je počet vlákien,
+	\item \textit{./script/query.rb N queries.in} simulácia prúdu dopytov, kde N je počet vlákien.
+\end{enumerate}
+Pre spusteni samotnej aplikácie na spracovanie, resp. filtrovanie prúdu údajov je potrebné byť v koreňovom priečinku aplikácie a vykonať nasledujúce príkazy:
+\begin{enumerate}
+	\item \textit{mvn package}, kompilácia a vytvorenie spustiteľného súboru,
+	\item \textit{java -cp StreamAnalysisFinal-2.0.2-jar-with-dependencies.jar edu.cimo.LocalTopologyRunner} pre spustenie topológie v lokálnom klastri.
+	\item \textit{storm jar -c nimbus.host=nimbus.example.com StreamAnalysisFinal-2.0.2-jar-with-dependencies.jar edu.cimo.LocalTopologyRunner} \textit{pre odoslanie topológie do vzdialeného klastra}.
+\end{enumerate}
+
+Po spustení program konzumuje správy z lokálnej inštancie Kafka komunikačného systému. V konfigurácii, ktorá je v návode konzumuje aj dopyty a simulovaný prúd dát z Twittru filtrouje podľa dopytov. Výsledky sú ukladané do databázy Redis na ďalšie spracovanie. My sme výsledky analyzovali ďalej pomocou programovacieho jazyka R. 
+% ======== GRAFY ======= %
+\newpage
+\section{Grafy}
+\subsection{Filtrovanie viacerými dopytmi} \label{p-filter-simple}
+\myFigure{images/exp-filter-simple-50q}{Filtrovanie 50 dopytmi pri duplikovaní dopytov naprieč topológiou.}{exp-filter-good-50q}{0.45}{h!}
+\myFigure{images/exp-filter-simple-200q}{Filtrovanie 200 dopytmi pri duplikovaní dopytov naprieč topológiou.}{exp-filter-good-50q}{0.45}{h!}
+\myFigure{images/exp-filter-simple-5kq}{Filtrovanie 5000 dopytmi pri duplikovaní dopytov naprieč topológiou.}{exp-filter-good-50q}{0.5}{h!}
+\myFigure{images/exp-filter-simple-20kq}{Filtrovanie 20 000 dopytmi pri duplikovaní dopytov naprieč topológiou. Špička v zobrazená v šesťdesiatej sekunda nastala pri spustení Java GC.}{exp-filter-good-50q}{0.5}{h!}
+
+\emptysinglepage
+\subsection{Smerovanie správ na základe dopytu} \label{p-filter-good}
+\myFigure{images/exp-filter-good-50q}{Filtrovanie 50 dopytmi, smerované správy naprieč topológiou.}{exp-filter-good-50q}{0.5}{h!}
+\myFigure{images/exp-filter-good-200q}{Filtrovanie 200 dopytmi, smerované správy naprieč topológiou.}{exp-filter-good-50q}{0.5}{h!}
+\myFigure{images/exp-filter-good-5kq}{Filtrovanie 5000 dopytmi, smerované správy naprieč topológiou.}{exp-filter-good-50q}{0.5}{h!}
+\myFigure{images/exp-filter-good-20kq}{Filtrovanie 20 000 dopytmi, smerované správy naprieč topológiou.}{exp-filter-good-50q}{0.5}{h!}
+
+
+% ======== MEDIUM ======= %
+\emptysinglepage
+\section{Obsah elektronického média}
+Prílohou tejto práce je elektronický nosič CD s nasledovným obsahom:
+\\[30pt]
+\textit{./files} - množina testovacích dát a výsledky vo formáte CSV \newline
+\textit{./graphs} - výsledné grafy experimentov \newline
+\textit{./res} - nástroje potrebné pre spustenie produktu \newline
+\textit{./scripts} - obsahuje skripty na simuláciu prúdu \newline
+\textit{./src} - zdrojové súbory bez závislostí \newline
+\textit{./doc} - obsahuje tento dokument v elektronickom formáte \newline
+
 

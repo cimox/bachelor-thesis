@@ -1,12 +1,140 @@
-%!TEX root = ./main.tex
-%
-% This file is part of the i10 thesis template developed and used by the
-% Media Computing Group at RWTH Aachen University.
-% The current version of this template can be obtained at
-% <http://www.media.informatik.rwth-aachen.de/karrer.html>.
+\newpage
+\chapter{Experimenty}
+\label{experimenty}
+Experimentovanie a overenie riešenia prebiehalo vo viacerých iteráciách. Overovanie sme vykonávali iteratívne a metodologicky. Proces testovania je zobrazený na obrázku 1 v prílohe \ref{p-tech-doku}. V každej iterácií sme sa snažili identifikovať prípadné problémy a okamžite navrhnúť ich riešenie, ktoré sme následne implementovali a opäť overili. Najčastejšie bolo potrebné správne identifikovať \textit{úzke hrdlo} (angl. bottleneck) overovanej topológie, ktoré spôsobovalo zníženie výkonnosti systému v špecifických prípadoch. Úlohou experimentu bolo filtrovanie prúdu údajov zo sociálnej siete Twitter podľa dopytov. 
 
-\chapter{Overenie a experimenty}
-\label{evaluation}
-\index{evaluation|(}
 
- \index{evaluation|)}
+ %  ================= METODOLOGIA OVEROVANIA ================= %
+\section{Metodológia overovania}
+Aby sme boli schopní merať výkonnosť riešenia, museli sme zaviesť časové značkovanie každej správy. Správa je označovaná časovou pečiatkou v každom uzle tak, ako prechádza naprieč topológiou. Na označenie správy časovou pečiatkou používame metódy \textit{nanoTime} a \textit{currentTimeMillis} triedy \textit{System}\footnote{Trieda System Javadoc: https://docs.oracle.com/javase/8/docs/api/java/lang/System.html} programovacieho jazyka Java. Metóda \textit{nanoTime} nám poskytuje čas bežiaceho virtuálneho stroja Java (angl. Java Virtual Machine, ďalej len JVM), nad ktorým je vykonávaný kód, v nanosekundách. Tento čas neodzrkadľuje systémový čas, ani čas reálneho sveta. Je vhodné ho využiť na meracie účely, a preto vyhovuje nášmu scenáru. Z týchto časových pečiatok odčítavame čas spracovania správy v každom bode topológie, a tiež celkový čas. Druhá metóda \textit{currentTimeMillis} vracia systémový čas JVM v milisekundách od epochy. Tento čas používame na porovnanie s časom spustenia zberača odpadkov Java (angl. Java Garbage Collector, ďalej len Java GC). Na monitorovanie Java GC sme použili nástroj VisualVM\footnote{VisualVM: https://visualvm.java.net/}, ktorý poskytuje komplexný monitorovací nástroj aplikácií vykonávaných nad JVM. Ukážka VisualVM sa nachádza v obrázku \ref{fig:visualvm}.
+\\[5pt]
+Na to, aby sme boli schopní porovnať výsledky, sme nemohli overovať experimenty na dátach priamo zo sociálnej siete Twitter, pretože neprichádzajú v koštantnej rýchlosti. Naviac, verejné API prúdu správ, ktoré poskytuje Twitter, predstavuje len malé percento (pozn.: presné číslo nie je zverejnené) z celého prúdú. Práve preto nie tento prúd nieje možné použiť na správne meranie výkonnosti aplikácie. My sme si vytvorili vlastnú množinu dát, ktorú sme istý čas zbierali z daného prúdu, a vytvorili sme súbor dát o veľkosti 1GB správ (tweetov). 
+
+\myBigFigure[]{images/IMG_exp-visualvm}{Príklad monitorovacieho panelu VisualVM pri monitorovaní bežiacej Java Aplikácie (konkrétne Apache Kafka).}{exp-visualvm}\label{fig:visualvm}
+
+Pri overovaní sme simulovali prúd údajov zo sociálnej siete množinou dát, ktorú sme si skôr pripravili. Topológie sme spúšťali v lokálnom klastri lebo sme nemali k dispozícií klaster fyzických strojov. Na overenie riešenia je to postačujúce. Dokonca tvorca Storm-u odporúča ladiť a overovať navrhnuté topológie lokálne pred odoslaním do vzdialenéhé klastra. 
+\\[5pt]
+Pre korektnosť testovania sme museli zistiť, aká je réžia samotného pečiatkovania správ, aby nám operácia pridania časovej pečiatky neskresľovala konečný sledovaný čas. Toto sme overili postavením jednoduchej topológie, ktorá nefiltrovala žiadne správy. Všetky iba prešli cez topológiu s jednou skrutkou (bolt), ktorá pridávala časovú pečiatku. Označený čas sme pri výstupe správy z topológie odčítali a a tak sme získali réžiu pečiatkovania. Zároveň týmto testom overujeme priepustnosť topológie (pozn.: nachádza sa tu iba jedna skrutka!). Výsledkok tejto réže je vo väčšine prípadov úplne zanedbateľný. Namerané výsledky zobrazuje grafe na obrázku 5.2. 
+\\[5pt]
+Z grafu vyplýva, že réžia pridania časovej pečiatky je takmer zanedbateľná, a nebude nám skresľovať merania. Pri tomto meraní sme výsledky ukladali do súboru CSV, pričom vychyľujúce sa hodnoty sú spôsobé spustením Java GC.
+
+\myBigFigure[H!]{images/timestamp-overheads-all}{Graf zobrazuje réžiu pridania časovej pečiatky do správy. Testovanie bolo realizovné štyrikrát s rôznym počtom vlákien. Na Y osi grafu je v poradí z dola zobrazený \textit{10\%}, \textit{25\%}, \textit{50\%} \textit{(medián)}, \textit{75\%} a \textit{90\%} kvantil.}{exp-timestamping-overheads}\label{fig:exp-timestamping-overheads} 
+
+Ako sme spomenuli, testovanie prebiehalo na lokálnom klastri, resp. na jednom lokálnom počítači. Parametre počítača, na ktorom boli topológie testované, sú zobrazené v prílohe \ref{p-tech-doku} tabuľka \ref{tab-param}. Verzie všetkých použitých nástrojov, programovacích jazykov a rámcov je možné vidieť v prílohe \ref{p-tech-doku} tabuľka \ref{tab-verziel}. Navrhujeme štyri testovacie scenáre v tabuľke \ref{tab-testy}. Všetky testovacie scenáre sú overené na rovnakej konfigurácii, pričom počas každého testovania je nastavený počet vlákien na štyri. V reálnom nasadení by sa tento počet určite navýšil a hlavne adaptoval v závislosti od zaťaženia systému. 
+Pre náš účel overenia výkonnosti sme tieto parametre zvolili ako najlepšií kompromis, aby sme získali konzistentné výsledky odzrkadľujúce reálne nasadenie. Dané parametre sme získali z dlhodobého experimentovania a pozorovania správania sa všetkých systémov a lokálneho klastra. Detaily týchto pozorovaní sú mimo rozsah našej práce. Hlavnou nevýhodou testovania lokálne bola simulovácia prúdu dát. Na jednom procesore sa snažíme generovať obrovské objemy dát, následne ich spracovať, a ešte aj uložiť, bolo nutné nájsť a zvoliť vhodný kompromis. \\
+
+
+
+ %  ================= PREDNASTAVENY FILTER ================= %
+% \newpage
+\section{Filtrovanie prednastaveným filtrom}
+V tomto experimente nás zaujíma výkonnosť  a priepustnosť samotného filtrovania a systému ako takého. To znamená, či je schopný spracovať a filtrovať veľké objemy správ (pozn.: v reálnom svete je pravdepodobné, že dopytov bude menej ako správ a výsledný prúd je potom podstatne zúžený) a produkovať vysoko objemový výstup. Preto filtrujeme približne polovicu objemu prúdu prednastaveným filtrom (pozn.: filtrujeme každú druhú správu), ktorý sme implementovali priamo do zdrojového kódu. V tomto experimente je teda iba jeden jednoduchý testovací scenár - filtrovanie podľa prednastaveného dopytu. Filtrujeme simulovaný prúd údajov zo sociálnej siete Twitter. Simuláciu zabezpečuje jednoduchý Ruby skript, ktorý cyklicky posiela správy do vstupného komunikačného systému Kafka. Keď je 1GB súbor správ prečítaný, skript pokračuje v čítaní od začiatku. Test trval 160 sekúnd. Testovaná topológia je zobrazená na obrázku 5.3. 
+\\[5pt]
+Experiment prebiehal v štyroch vláknach, bolo spracovaných takmer 150 000 správ. Špičky zobrazené na grafe sú spôsobené spustením Java GC a výpadkom stránky databázy Redis, kam boli zapisované výsledky. Tento výpadok nastáva, keď veľkosť databázy prekročí stanovený limit, ktorý je nakonfigurovaný (pozn.: Redis je primárne databáza, ktorá ukladá všetko do hlavnej pamäti, v prípade prekročenia tohto limitu zapisuje čiastkový súbor na disk). 
+\\[5pt]
+V grafe na obrázku 5.4 môžeme vidieť viac časových špičiek spracovania prúdu počas experimentu. Tieto špičky sú spôsobené spustením Java GC (pozn.: spustenie Java GC sme pozorovali nástrojom VisualVM a ručne sme porovnali čas spustenia s časom špičiek počas experimentu), ale mohlo sa na tom podielať aj preplánovanie procesov operačným systémom. 
+Je to spôsobné tiež tým, že na jednom počítači bežia všetky systémy (pozn.: Kafka, ZooKeeper, Storm, Redis, simulačné skripty) potrebné pre experiment. 
+Prúd síce nie je veľmi objemný, ale ak ho máme na jednom fyzickom stroji generovať, predspracovávať (pozn.: Kafka), spracovávať (pozn.: naša topológia nad rámcom Storm) aj ukladať (pozn.: Redis), veľmi zaťažuje PC. 
+Navyše, okrem databázy Redis a simulačných skriptov, všetko beží nad jedným JVM (pozn.: čo zvyšuje šance na spustenie Java GC). Aj napriek týmto špičkám hodnotíme priepustnosť a výkonnosť ako výbornú, pretože sa odozva systému rýchlo ustáli do prijateľných hodnôt. 
+\\[5pt]
+Miera rozdelenia nameraných časov je zobrazená na grafe v obrázku 5.5.
+
+\label{fig:exp-prednst-topology}
+\myFrameBigFigure{IMG_exp-prednst-topology}{Topológia pre filtrovanie prúdu prednastaveným filtrom.}{exp-prednst-topology}
+
+\myFigure{images/IMG_exp-filter-prednastaveny-all}{Filtrovanie prúdu údajov prednastaveným filtrom po dobu 160 sekúnd.}{exp-filter-prednastaveny}{0.55}{h!tbp}
+
+\myFigure{images/IMG_exp-filter-prednastaveny-all_BOX}{Filtrovanie prúdu údajov prednastaveným filtrom po dobu 160 sekúnd. Na Y osi grafu sú zobrazené kvantily v poradí \textit{10\%}, \textit{25\%}, \textit{50\%} \textit{(medián)}, \textit{75\%} a \textit{90\%} kvantil.}{exp-filter-prednastaveny-box}{0.55}{h!tbp}
+
+
+
+
+
+
+ %  ================= VIAC DOPYTOV ================= %
+\emptysinglepage
+\section{Filtrovanie viacerými dopytmi}
+V tomto experimente filtrujeme prúd údajov podľa dopytov. Na prichádzajúce dopyty sa tiež pozeráme ako na prúdiace údaje. Simulujeme prúdiace správy zo siete Twitter a dopyty od používateľov. Aplikujeme testovacie scenáre, ktoré sú zobrazené v tabuľke \ref{tab-testy}. Smerovanie dopytov je také, že všetky dopyty sú duplikované do každého filtračného uzla (skrutky) topológie. Toto duplikovanie dopytov môže byť problematické pri veľkom objeme prúdu správ a dopytov, pretože bude rásť časová náročnosť filtrovania bez ohľadu na škálovateľnosť riešenia. Tým sa zvyšuje šanca prúdenia duplikátov cez topológiu, pretože ich kontrola je možná len v postspracovaní prúdu kontrolou ID správy. Na obrázku 5.6 je zobrazená testovacia topológia.
+\\[5pt]
+Na grafe v obrázku 5.7 je zobrazený priebeh času spracovania filtrovania viacerými dopytmi v priebehu experimentu. Približne po šesťdesiatich sekundách nastane náhle zvýšenie odozvy systému. Táto situácia nastáva opäť pri spustení Java GC (pozn.: odčítanie sme vykonali ručne z monitorovacieho nástroja VisualVM). Síce sa čas spracovania rýchlo ustáli do prijateľných hodnôt, spracovanie sa nejaví ako stabilné. Je možné pozorovať nestálosť a anomálie v čase spracovania správy. Tieto anomálie môžu byť spôsobené preplánovaním procesov operačným systémom lokálneho klastra. Je ale málo pravdepodobné, že toto by vnieslo do spracovania tak často pozorovateľné výchylky. Preto tvrdíme, že tieto anomálie predstavujú zvýšenú programovú réžiu pri spracovaní duplikovaných správ a dopytov (pozn.: keďže každý filtračný uzol obsahuje množinu všetkých dopytov, pri prechode jednej správy musí skontrolovať zhodu s viacerými dopytmi, či nespĺňajú filtračnú podmienku, toto tiež zvyšuje nároky na hlavnú pamäť, ktorá je veľmi obmedzená). Tento jav môžeme tiež pozorovať na grafe zobrazenom na obrázku 5.8, kde sledujeme širokú distribúciu časov filtračnej časi a tiež celkového času, pričom pozorujeme tendeciu zvyšovania šírky tejto distribúcie časov. 
+\\[5pt]
+Toto vymedzujeme ako problém, ktorý môže pri spracovaní väčších, resp. prúdov reálneho sveta, spôsobovať problémy zanášaním \textit{nestability} systému a \textit{vysokej odozvy} v špecifických prípadoch. S ďalším zväčšením objemu prúdu a kadencie vzniku nových udalostí by toto mohlo predstavovať úzke hrdlo. 
+\\[5pt]
+Ďalšie výsledky sú zobrazené tiež v tabuľke \ref{tab-testy}, podrobnejšie čiarové grafy sú dostupné v prílohe \ref{p-filter-simple}.
+% ===== TESTOVACIE SCENARE ===== %
+\begin{table}[h!]
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    \textbf{\#} & \textbf{Dopyty} & \textbf{Trvanie (s)} & \textbf{Dáta}                   & \textbf{Výsledok\newline(medián)} \\ \hline
+    1  & 50            & 160                     & 1GB dataset cyklicky  & 0.2011 ms        \\ \hline
+    2  & 200           & 160                     & 1GB dataset cyklicky  & 0.1972 ms      \\ \hline
+    3  & 5000          & 160                     & 1GB dataset cyklicky  & 0.19830 ms       \\ \hline
+    4  & 20000         & 200                     & 1GB dataset cyklicky  & 0.19790 ms       \\ \hline
+%    5  & 5000          & 60 000                  & Twitter livestream API & -        \\ \hline
+    \end{tabular}
+    \caption{Testovacie scenáre.}
+	\label{tab-testy}
+\end{table}
+
+\myFrameBigFigure{IMG_exp-podla-dopytu}{Topológia pre filtrovanie podľa dopytu pri duplikovaní (zoskupenie resp. smerovanie) dopytov do všetkých filtračných uzlov.}{exp-podla-dopytu}\label{fig:exp-podla-dopytu}
+
+\myBigFigure{images/exp-filter-simple-20kq}{Filtrovanie viacerými dopytmi po dobu 200 sekúnd.}{exp-filter-simple-20k}
+
+\myBigFigure{exp-filter-simple-FINAL}{Zobrazuje čas spracovania správy v uzle topológie a celkový čas. Na Y osi sú zobrazené kvantily v tomto poradí \textit{10\%}, \textit{25\%}, \textit{50\%} \textit{(medián)}, \textit{75\%} a \textit{90\%}.}{exp-podla-dopytu}\label{fig:exp-podla-dopytu}
+
+
+
+ %  ================= VIAC DOPYTOV SPRAVNE SMEROVANIE ================= %
+ \emptysinglepage
+\section{Smerovanie správ na základe dopytu}
+V predošlom experimente sme identifikovali problematickú časť topológie, ktorá by s nárastom objemu prúdu (pozn.: v praxi také prúdy dát existujú, ale nevieme ich doma jednoducho simulovať) predstavovala úzke hrdlo topológie. Je potrebné navrhnúť také riešenie, kde budú dopyty rovnomerne rozdelené do filtračných uzlov v topológii. Prúdiace správy budú následne smerované do týchto filtračných uzlov podľa extrahovaných identifikačných slov. Tu môže vzniknúť duplikovanie správ, avšak šanca, že budú duplikáty pokračovať aj po filtrovaní závisí od obsahu identifikačných slov v správe. Mohlo by sa to stať napríklad vtedy, ak budú dve rôzne identifikačné slova v texte správy, potom je nutné správu duplikovať (pozn.: správa je emitovaná práve raz pre každé rôzne extrahované identifikačné slovo). Tymto garantujeme doručenie správy práve raz, ak správne odstránime duplikáty, ktoré prejdu filtračnou časťou. Filtračnou časťou prejdú vtedy a len vtedy, ak existuje správa s dvomi rôznymi identifikačnými slovami a zároveň existujú dva dopyty na tieto slová, potom je filtračná podmienka splnená dva krát. Takto vzniknuté duplikáty je potrebné odstrániť v neskorších fázach spracovania. 
+\\[5pt]
+Pôvodný nápad bol všetky dopyty ukladať do rýchlej vyrovnávacej pamäte, kde by sa ukladali iba unikátne dopyty. Filtračné uzly by sa pri spracovávaní správy dopytovali do tejto pamäte, či existuje dopyt na identifikačné slovo, ktoré obsahuje správa. Toto riešenie by bolo určite funkčné, ale pri veľkom počte správ by sa táto pamäť stala úzkym hrdlom. Preto navrhujeme riešenie, ktoré zabezpečuje smerovanie správ v topológii podľa identifikačných slov resp. dopytov. Znamená to, že uzly spracujúce dopyt \textit{X} vždy dostanú správy obsahujúce identifikačné slovo \textit{X}. Rozdelenie teda nie je miešané (shuffle). Samozrejme, mohlo by sa zdať, že distribúcia správ a zaťaženie nie je rovnomerné, ak bude existovať veľa správ s identifikačným slovom \textit{X} a málo s \textit{Y}. Avšak toto smerovanie, ktoré implementuje ako zoskupenie rámec Storm, zabezpečuje rovnomerné rozdelenie zaťaženia naprieč topológiou. Týmto riešením znižujeme tiež šancu na vznik duplikátov, s ktorými je neskôr spojená réžia a odstraňujeme potenciálne úzke hrdlo topológie. 
+\\[5pt]
+Topológia je identická ako v predošlom experimente, rozdielne je iba smerovanie, resp. zoskupenie správ (n-tíc prúdu). Z grafu zobrazenom na obrázku 5.9 môžeme pozorovať znížený výskyť anomálií počas spracovania. Toto zlepšie je ešte lepšie viditeľné na grafe z obrázku 5.10 kde pozorujeme zúženie distribúcie času spracovania. Zlepšenie je navýraznejšie pri filtračnej časti, pričom ostatné časti vykazujú ustálené časy. Podstatné je, že sa tento čas nestáva počas priebehu experimentu nestabilný aj v prípade zvyšovania počtu dopytov. Takéto riešenie nám potom prinesie určite stabilnejší systém bez zanášania častej zvýšenej odozvy. Tvrdíme, že sme týmto odstránili vymedzené úzke hrdlo v predchádzajucej iterácii experimentovania. 
+\\[5pt]
+Ďalšie čiarové grafy sú dostupné v prílohe \ref{p-filter-good}.
+% ===== TESTOVACIE SCENARE ===== %
+\begin{table}[h!]
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    \textbf{\#} & \textbf{Dopyty} & \textbf{Trvanie (s)} & \textbf{Dáta}                   & \textbf{Výsledok\newline(medián)} \\ \hline
+    1  & 50            & 160                     & 1GB dataset cyklicky  & 0.2076 ms       \\ \hline
+    2  & 200           & 160                     & 1GB dataset cyklicky  & 0.2039 ms     \\ \hline
+    3  & 5000          & 160                     & 1GB dataset cyklicky  & 0.1964 ms       \\ \hline
+    4  & 20000         & 200                     & 1GB dataset cyklicky  & 0.19080 ms       \\ \hline
+%    5  & 5000          & 60 000                  & Twitter livestream API & -        \\ \hline
+    \end{tabular}
+    \caption{Testovacie scenáre.}
+	\label{tab-testy2}
+\end{table}
+\myBigFigure{images/exp-filter-good-20kq}{Filtrovanie smerovanými dopytmi a správami po dobu 200 sekúnd.}{exp-filter-good-20k}
+
+\myBigFigure{exp-filter-good-FINAL}{Zobrazuje čas spracovania správy v uzle topológie a celkový čas. Na Y osi sú zobrazené kvantily v tomto poradí \textit{10\%}, \textit{25\%}, \textit{50\%} \textit{(medián)}, \textit{75\%} a \textit{90\%}.}{exp-podla-dopytu}\label{fig:exp-podla-dopytu}
+
+
+
+\section{Zhodnotenie}
+Z výsledkov experimentov vyplýva, že na správanie systému vplýva veľa faktorov. Obzvlášť testovanie tohto rozmeru, kde na jednom počítači simulujeme prúd dát a zaroveň aj spracujeme je náročné. Často môže nastať preplánovanie procesov operačným systémom, môže sa spustiť Java GC (nad jedným JVM beží viac nástrojov ako Kafka, ZooKeeper, atď). Tieto udalosti môžu do spracovania zaviesť latenciu (viď. obr. 5.5 Filtrovanie prednastavenym filtrom). V reálnom nasadení by boli časti pred a postspracovanie prúdu oddelené na iných fyzických strojov, často takých o ktorých nevieme nič. Samotné riešenie by bežalo v klastri strojov, takže by sa výskyt takýchto udalostí ešte viac minimalizovali. Dosiahli sme spracovanie v  reálnom čase, tak ako sme si to na začiatku práce definovali.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\index{evaluation|(}
+
+% \index{evaluation|)}

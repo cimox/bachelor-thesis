@@ -1,6 +1,7 @@
 %!TEX root = ./main.tex
 
-\documentclass[11pt, a4paper, titlepage, slovak]{book}
+%\documentclass[11pt, a4paper, titlepage, slovak]{book}
+\documentclass[12pt, a4paper, titlepage, slovak]{book}
 
 %Includes all neccessary packets and contains some useful commands
 \include{i10preamble}
@@ -13,6 +14,12 @@ map-reduce
 oblastiach
 korpusov
 processing
+modelu
+vstupno
+ZeroMQ
+tieto
+priamo
+vtedy
 }
 
 
@@ -39,10 +46,10 @@ processing
 {\Large Slovenská technická univerzita v Bratislave} \\
 {\Large Fakulta informatiky a informačných technológií} \\
 \vspace*{1\baselineskip}
-\large {Evidenčné číslo}
+\large {FIIT-5212-8279}
 \vfill % vert. plnenie prazdnymi medzerami                                                                                                                                                                    
 
-\newpage
+%\newpage
 
 {{Matúš Cimerman}} \\
 \vspace*{1\baselineskip}
@@ -58,7 +65,7 @@ processing
 {Vedúci práce: Ing. Jakub Ševcech}\\
 \\
 %\vspace*{1\baselineskip}
-{december, 2014}
+{máj, 2015}
 \end{titlepage}
 \emptydoublepage
 
@@ -68,7 +75,7 @@ processing
 {\Large Slovenská technická univerzita v Bratislave} \\
 {\Large Fakulta informatiky a informačných technológií} \\
 \vspace*{1\baselineskip}
-\large {Evidenčné číslo}
+\large {FIIT-5212-8279}
 \vfill % vert. plnenie prazdnymi medzerami                                                                                                                                                                    
 
 
@@ -88,7 +95,7 @@ processing
 {Miesto vypracovania: Ústav informatiky a softvérového inžinierstva, FIIT STU Bratislava}\\
 {Vedúci práce: Ing. Jakub Ševcech}\\
 \\
-{december, 2014}
+{máj, 2015}
 
 \end{titlepage}
 \restoregeometry
@@ -97,6 +104,9 @@ processing
 
 %\include{declarationofownwork}
 %\emptydoublepage
+
+%pred abstrakt treba vlozit jebnute zadanie
+\includepdf[pages={1}]{ZADANIE.pdf}
 
 %the abstract should include an english and a slovak version
 \include{abstract}
@@ -113,6 +123,7 @@ processing
 \renewcommand{\contentsname}{Obsah}
 \singlespacing
 \tableofcontents
+
 \emptydoublepage
 \onehalfspacing
 %\doublespacing
@@ -137,18 +148,11 @@ processing
 \emptydoublepage
 \include{method}
 \emptydoublepage
-\include{implementation}
+%\include{implementation}
 \include{evaluation}
 \emptydoublepage
 \include{summaryandfuturework}
 \emptydoublepage
-
-\begin{appendix}
-\include{appendix_01}
-\emptydoublepage
-%\include{appendix_02}
-%\emptydoublepage
-\end{appendix}
 
 %--------------------------------------------------------------
 % prilohy, index
@@ -162,6 +166,17 @@ processing
 \renewcommand{\bibname}{Literatúra}
 \bibliography{thesis}
 \emptydoublepage
+
+\begin{appendix}
+\include{appendix_01}
+%\include{appendix_02}
+%\include{appendix_03}
+%\include{appendix_04}
+\emptydoublepage
+%\include{appendix_02}
+%\emptydoublepage
+\end{appendix}
+
 
 %index
 %\markboth{Index}{Index}

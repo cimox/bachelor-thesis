@@ -7,18 +7,12 @@
 
 \chapter{Zhodnotenie a budúca práca}
 \label{conclusionandfuturework}
-
-%here 
-
-\section{Zhodnotenie a záver}
-\label{conclusionandfuturework.summary}
-
-%here
-
-\section{Budúca práca}
-\label{conclusionandfuturework.futurework}
-\index{future work|(}
-
-%here
-
-\index{future work|)}
+V našom projekte sme podrobne analyzovali súčasné možnosti spracovania veľkých objemov dát (angl. Big Data). Vymedzili sme dva hlavné prístupy, dávkové a prúdové spracovanie. Pozornosť sme venovali najmä prúdovému spracovaniu a existujúcim nástrojom, ktoré spĺňajú požiadavky na prúdové spracovanie. Venovali sme sa analýze prúdu údajov zo sociálnej siete Twitter, pričom sme sa zamerali na filtračnú časť spracovania.
+\\[5pt]
+Hlavným príspevkom našej práce je to, že sa nám úspešne podarilo overiť rôzne topológie implementované nad zvoleným programovacím rámcom pre prúdové spracovanie. Najprv sme sa snažili identifikovať potenciálne limitácie samotného rámca, ktoré sa neprejavili ako kritické. Vyskúšali sme a podrobne overili štyri topológie. V poslednej sme dosiahli nami stanovené požiadavky na prúdové spracovanie. Zistili sme, že koexistencia viacerých systémov na jednom fyzickom stroji môže spôsobovať zvýšenie odozvy pre krátky časový okamih. Aj napriek tomuto zvýšeniu sme stále poskytovali riešenie odolné voči chybám. 
+\\[5pt]
+Iteratívnym overovaním a vylepšovaním riešenia sme ukázali, že distribúcia správ môže mať zásadný dopad na fungovanie a správanie systému. Ukázali sme navrhnutá topológia v poslednej iterácii poskytuje dostatočne stabilné riešenie pre spracovanie prúdov. Pozorujeme tiež, že snaha rozdeľovať operácie nad prúdom do viacerých operácií znižuje šancu na vzniknutie úzkeho hrdla naprieč topológiou. Rovnako tvrdíme, že s čo najmenším prepojením systému do externých systémov v priebehu spracovania prúdu znižuje riziko vzniku úzkeho hrdla.
+\\[5pt]
+Implementované riešenie sme overili na dátach zo sociálnej siete Twitter, pričom sme museli simulovať prúdiace údaje. Napriek komplexite testovania sa nám úspešne podarilo overiť a ukázať, že naše riešenie spĺňa požiadavky stanovené v počiatku práce. Tiež spĺňa všeobecné požiadavky na prúdové spracovanie. 
+\\[5pt]
+Ďalším zaujímavým smerom by bola kombinácia dávkového a prúdového spracovania (pozn.: Lambda architektúra). Budúcim krokom bude tiež návrh a implementácia klientskej aplikácia spolu so snahou získať prístup k prúdu údajov reálneho sveta.

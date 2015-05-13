@@ -1,12 +1,123 @@
 \linespread{1.5}
 
-\chapter{Aplikácia pre filtrovanie v prúde dát}
-V predchádzajúcej kapitole sme sa venovali existujúcim riešeniam na spracovanie veľkého objemu dát. Niektoré sa zameriavajú na dávkové spracovanie veľkých dát, iné na spracovanie "rýchlych dát" v reálnom čase.
-Navrhujeme metódu na analýzu prúdu údajov. Dáta prúdia zo zdroja v reálnom čase. Naša metóda spracuje prúd údajov v reálnom čase a poskytytuje používateľovi hodnotný výstup na základe dopytu. Metódu navrhujeme pre doménu sociálnych sietí, konkrétne Twitter. Cieľom metódy je overiť vlastnosti spracovania a filtrovania prúdu správ pomocou rámca Storm.
-Vstupom do procesu spracovania prúdu údajov je potenciálne nekonečný prúd údajov.
-\section{Všeobecná topológia}
+ %  ================= NAVRH RIESENIA ================= %
+\chapter{Návrh riešenia}
+V tejto práci navrhujeme metódu na analýzu prúdu dát. Presnejšie sa zameriavame na filtrovanie prichádzajúceho prúdu údajov na základe používateľského dopytu. Dáta prúdia zo zdroja v reálnom čase vysokou rýchlosťou a vo veľkom objeme. 
+Naša metóda spracuje prúd údajov v reálnom čase a poskytytuje používateľovi hodnotný výstup na základe jeho dopytu do prúdu. Metódu navrhujeme pre doménu sociálnych sietí, konkrétne pre Twitter. Cieľom metódy je overiť vlastnosti spracovania a filtrovania prúdu správ pomocou zvoleného programovacieho rámca. Iteratívne a metodologicky zdokonaľujeme základnú myšlienku návrhu. Po každej iterácii overujeme niekoľkými experimentami vlastnosti riešenia. Navrhujeme len systém, ktorý spracuje prúd údajov a poskytne výsledok na ďalšie spracovanie. Naopak nenavrhujeme klientskú aplikáciu, ktorá ďalej s výsledkami pracuje. Návrhu a implementácii konkrétnej klientskej aplikácie sa v tejto práci nevenuje, tento krok bude predmetom ďalšej práce. 
 
+ %  ================= POZIADAVAKY ================= %
+\section{Požiadavky na riešenie}
+Cieľom je filtrovať prúdiace údaje zo sociálnej siete Twitter na základe používateľského dopytu v reálnom čase. Je potrebné paralelne spracovávať rádovo desaťtisíce dopytov. Udalosti prúdu údajov z Twittru môžu vznikať rádovo v desaťtisícoch až miliónoch udalostí za sekundu \citep{mathioudakis2010twittermonitor}. Je potrebné všetky tieto udalosti spracovať efektívne a následne poskytnúť odozvu v reálnom čase. Vymedzili sme nasledujúce požiadavky na navrhovaný systém:
+\begin{itemize}
+	\item \textit{spracovanie v reálnom čase}, systém musí poskytnúť používateľovi výsledok podľa dopytu v reálnom čase (pozn.: chápanie pojmu reálny čas sme definovali v úvode práce), rádovo maximálne desiatky milisekúnd.
+	\item \textit{horizontálna škálovateľnosť}, riešenie musí byť horizontálne škálovateľné takým spôsobom, aby bolo možné pridávať nové fyzické uzly do klastra za behu, bez akýchkoľvek výpadkov.
+	\item \textit{odolnosť voči chybám} je kritická, žiadne správy z prúdu nesmú byť stratené, pričom musí byť zabezpečené doručenie správy \textit{práve raz} (angl. exactly once).
+	\item spracovanie prebieha iba v \textit{hlavnej pamäti}, žiadne dáta nie sú ukladané na disk a prúd bude spracovaný tak, ako údaje vznikajú.
+	\item spracovanie \textit{nedokonalých} alebo \textit{chybných} správ. Poškodené, alebo správy, ktoré prišli v zlom poradí, musia byť spracované v čo najlepšej možnej miere (pozn.: poškodené dáta nemusí byť možné spracovať, potom sú zahodené).
+	\item zaťaženie systému by malo byť \textit{rovnomerné}, takže by sa nemalo stať, aby jeden uzol z desiatich spracovával 90\% prúdu a zvyšných 10\% prúdu bude distribuovaných medzi deväť uzlov.
+\end{itemize} 
+Pre splnenie týchto požiadaviek bola najlepšia voľba programovacieho rámca Storm. Použitím tohto rámca sa môžeme sústrediť na implementáciu logiky a funkcionality systému, ladenie odozvy a rozloženie zaťaženia systému. Využitím vlastností Storm-u (distribuované a škálovateľné riešenie, ktoré je odolné voči chybám) sa nemusíme sústrediť na riešenie niektorých z vymenovaných problémov. Použitím Storm-u sa tiež vyhneme blokujúcim operátorom (napr. agregácia, alebo zoskupenie podľa hodnoty) opísaných v kapitole \ref{prudove-spracovanie-dat}.
+
+ %  ================= VSEOBECNY NAVRH ================= %
+\section{Všeobecný návrh}
+Pre zjednodušenie budeme poškodené alebo chybné dáta zahadzovať. V reálnom svete by malo zmysel ich špeciálne spracovávať, avšak v našom scenári sú najčastejšie chybné dáta identifikované ako správy \textit{delete}, ktoré značia zmazanie nejakej správy z prúdu v minulosti. 
+\\[5pt]
+Tradičný pristup k spracovania údajov, je použitie relačnej databázy. Informácie z prúdiacich udalostí by museli byť najprv extrahované a následne uložené v relačnej databáze. Tento prístup zlyháva pri masívnom zapisovaní štrukturovaných údajov, a paralelnom dopytovaní sa do databázy. Dávkové spracovanie je veľmi podobné, ale dáta sú často zapisované neštruktúrované. Aj keď je vtedy zapisovanie rýchle, vzhľadom na objem ukladaných dát spracovanie trvá priliš dlho. Preto navrhujeme všeobecnú topológiu postavenú na rámci Storm. 
+\\[5pt]
+Navrhujeme topológiu, ktorá vychádza z princípu dátovodov a filtrov \citep{aggarwal2007data}, hlavný rozdiel je v tom, že spracovanie prebieha distribuovane a paralelne. Vďaka tomu môžeme dosahovať odozvu v reálnom čase. Podrobnejšie je návrh rozobratý a načrtnutý pri každej iterácií opísanej v časti \ref{experimenty} Experimenty.
+%\newpage
+\myFrameBigFigure[H]{images/IMG_navrh-vseobecna}{Všeobecný návrh softvérovej súčiastky na filtrovanie prúdu údajov na základe dopytu v reálnom čase. Venujeme sa len tejto časti, moduly za postspracovaním sú zobrazené len pre ilustráciu toho, ako je ďalej možné pracovať s výsledkami. Hlavným častiam návrhu sa venujeme v nasledujúdich troch podkapitolách samostnatne.}{navrh-vseobecna} 
+
+
+
+ %  ================= PREDSPRACOVANIE ================= %
+\subsection{Predspracovanie vstupných údajov}
+Na vstupe sú dva prúdy: prúd udalostí z Twittru a prúd dopytov používateľa. Ich povaha si vyžaduje špeciálnu pozornosť. Údaje prúdiace vo veľkých objemoch a vysokou rýchlosťou je potrebné bezchybne spracovať. Keby sme udalosti len jednoducho čítali a spracovávali tak, ako vznikajú, mohlo by sa nesprávnym preplánovaním procesov stať, že niektoré údaje sa nenávratne stratia už na vstupe. Naviac chceme zabezpečiť, aby údaje prišli v takom poradí, v akom vznikajú (pozn.: preusporiadanie zdrojom nevieme ovplyvniť). 
+Aby sme tomuto predišli, budú všetky vstupné údaje zaraďované do špeciálnej \textit{fronty}. Toto riešenie musí byť \textit{distribuované}, pretože vlastnosti prúdiacich údajov sa v čase menia. Na tieto zmeny musíme byť schopní reagovať. 
+\\[5pt]
+Potom má zmysel použiť samostatný nástroj na spracovanie údajov vstupujúcich do topológie, resp. softvérovej súčiastky na spracovanie prúdu. Oddelením biznis logiky od predspracovania má výhodu v tom, že nástroj predspracujúci vstupné údaje je zameraný len na jednu činnosť, ktorú robí najlepšie ako vie. Predspracovávané údaje musia byť naviac zapisované na disk tak, aby sme mohli zaručiť odolnosť voči chybám. Toto ukladnie musí byť vyriešené takým spôsobom, že to neovplyvní výkonnosť systému. V hlavnej pamäti sú vždy najnovšie správy a tie, ktoré už boli spracované (odoslané a potvrdené \textit{ack}) sa môžu na pozadí ukladať \textit{dočasne} (pre stanovený časový interval) na disk. 
+\\[5pt]
+Keďže celé riešenie má distribuovaný charakter, je predpoklad, že bude existovať viac uzlov konzumujúcich rovnaký prúd. Potom musí byť prúd duplikovaný. Konzumenti si musia vedieť vybrať čo budú konzumovať (pozn.: v tomto prípade hovoríme o údajoch z Twittru alebo dopytoch). Niekedy môže byť užitočné konzumovať viac prúdov jedným konzumentom. Preto navrhujeme použiť nástroj aplikujúci vzor \textit{publikovať-predplatiť} (angl. publish-subscribe) \citep{kreps2011kafka}. 
+
+ %  ================= SPRACOVANIE REAL-TIME ================= %
+\subsection{Spracovanie v reálnom čase}
+V tejto časti filtrujeme prúdiace dáta na základe používateľského dopytu podľa extrahovaných \textit{identifikačných slov} (hashtag) zo správ (tweet), ktoré prúdia zo sociálnej siete Twitter. Identifikačné slová sú vždy označené znakom \textit{\#}. Dopyty prúdia v rovnakej forme takže sa používateľ sa dopytuje pomocou identifikačných slov, ktoré by sa mohli nachádzať v správe. Identifikačné slová je potrebné pred aplikovaním filtra extrahovať zo správ. Je to jednoduchá operácia, pretože za identifikačné slová považujeme slová označené znakom \#. 
+\\[5pt]
+Pre efektívne filtrovanie musíme zohľadniť objem a rýchlosť prúdiacih údajov a dopytov. Niektoré dopyty môžu byť duplikáty, a preto nemá zmysel vytvárať nový filter. Navrhujeme, aby sa len isté uzly starali o filtrovanie určitých identifikačných slov. Tým rovnomerne rozložíme zaťaženie filtračnej časti systému. Bude preto potrebné extrahovať identifikačné slová v skoršej fáze filtrovania, a následne správy smerovať do filtračných uzlov podľa extrahovaných identifikačných slov. Naviac vyžadujeme zabezpečiť doručenie každej správy \textit{práve raz}. Pre splnenie tejto požiadavky navrhujeme aplikovať  podobný potvrdzovací mechanizmus odoslaných správ, ktorý je známy zo sieťového protokolu TCP\footnote{Transmission Control Protocol}. 
+Daný mechanizmus funguje tak, že odosielateľ si udržuje frontu odoslaných a nepotvrdených správ. Odosielateľ čaká zadefinovaný čas po odoslaní správy a na jej \textit{potvrdenie}, ak potvrdenie (pozn.: zaužívaná notácia je \textit{ack}) nepríde do tohto časového intervalu od prijímateľa, správa je odosielateľom preposlaná. 
+
+%\subsection{Diagram komponentov}
+
+ %  ================= POSTSPRACOVANIE ================= %
+\subsection{Postpracovanie výsledku}
+V poslednej fáze spracovania máme k dispozícii výsledky, ktoré je potrebné nejakým spôsobom spracovať. Táto fáza nepredstavuje hlavnú funkcionalitou, ktorú navrhujeme. Najčastejšie sú výsledky emitované do výstupného frontu, odkiaľ ich môže konzumovať klientská aplikácia. Avšak, výsledky môžu byť posielané tiež priamo do otvoreného sieťového socketu alebo zapisované do vyrovnávacej pamäti. V zásade, to, čo sa má stať v poslednej fáze, nie je nutné vedieť dopredu. Môžeme aplikovať zapisovanie do všeobecného frontu (obdoba predspracovania) odkiaľ výsledky konzumuje kto potrebuje. To čo sa už ďalej stane s výsledkami (napr. čítanie a mazanie vyrovnávacej pamäte) pre nás nie je rozhodujúce, je to väčšinou aplikačný problém. 
+\\[5pt]
+My budeme pre testovanie a overenie návrhu výsledky ukladať do vyrovnávacej pamäti typu kľúč-hodnota (angl. key-value) a tiež do súboru CSV\footnote{Hodnoty oddelené čiarkou (angl. Comma-separated values)}.
+
+ %  ================= IMPLEMENTACIA ================= %
+ \newpage
+\section{Implementácia a použité technológie}
+Implementácia návrhu riešenia vychádza z jeho opisu v predchádzajucej kapitole. Každá podstatná časť návrhu si vyžiadala špeciálnu pozornosť, a dôraz na výber a aplikovanie správnych nástrojov a postupov. Programovací rámec Storm\footnote{Apache Storm: https://storm.apache.org/} sme si zvolili na implementáciu hlavnej časti nášho návrhu spracovania prúdu v reálnom čase. Hlavnými dôvodmi voľby nástroja Storm je, že poskytuje distribuované riešenie odolné voči chybám. Z toho vyplýva, že spĺňa stanovené požiadavky, ktoré sme si na začiatku stanovili. Tento nástroj sme podrobnejšie analyzovali v časti \ref{existujuce-storm-subkap} Storm. 
+\\[5pt]
+Nástroj Kafka\footnote{Apache Kafka: http://kafka.apache.org/} sme vybrali pre fázu predspracovania. Zabezpečuje počiatočné zachytenie prúdu údajov, pričom vychádza zo vzoru publikovať-predplatiť (angl. publish-subscribe). Tento nástroj poskytuje oddeľovanie prúdov podľa tém (topic), distribuované riešenie odolné voči chybám, a zaručuje doručenie správ ich potvrdzovaním. Je možné ho využiť aj vo fáze postspracovania výsledkov ako rýchlu frontu výsledkov. Výsledky budú rozdelené do prúdov podľa tém na základe filtračných dopytov. Klientská aplikácia sa môže následne dopytovať na podmnožinu tém, či prúdov. My sme výsledky ukladali do rýchlej distribuovanej kľúč-hodnota databázy Redis\footnote{Redis: http://redis.io/}, ktorú sme použili ako vyrovnávaciu pamäť výsledkov pre neskoršie vyhodnotenie experimentov a výkonnosti celej implementácie. Redis je primárne databáza, ktorá ukladá všetko v hlavnej pamäti (pozn.: vďaka tomu rýchla, a preto používaná ako vyrovnávacia pamäť), a v prípade prekročenia limitu pridelenej pamäte zapisuje na dáta disk. 
+\\[5pt]
+Navrhujeme všeobecnú topológiu zobrazenú na obrázku 4.2 (pozn.: topológia predstavuje orientovaný acyklický graf\footnote{DAG: directed acyclic graph} výpočtových uzlov), ktorá je postavená na programovacom rámci Storm. Využívame to, že náš problém je možné ľahko paralelizovať a teda všetky uzly topológie bežia vo viacerých vláknach. Topológia môže naviac bežať v klastri fyzických výpočtových uzlov, ktoré sú prepojené napríklad v sieti internet a úplne nezávislé od seba (napr. hardvér, lokácia, atď.). 
+\\[5pt]
+Smerovanie a distribúcia prúdu správ (tweet) medzi uzlami je rovnomerná. Znamená to, že správy budú v rámci topológie distribuované tak, aby bolo zaťaženie všektých uzlov rovnomerné. Toto je implementované \textit{zoskupením} (angl. grouping) správ, ktoré poskytuje a vnútorne implementuje rámec Storm vrátane sledovania stavu (Nimbus a ZooKeeper) uzlov. Toto zoskupenie, resp. distribúcia správ v rámci topológie je nazvané \textit{miešané rovnomerné zoskupenie} (angl. shuffle grouping).
+Distribúcia dopytov sa mierne odlišuje. Každý dopyt musí byť doručený do všetkých filtračných uzlov (pozn.: nastáva duplikácia dopytov), pretože na začiatku nevieme, do ktorého uzla, resp. pracovníka (worker) a úlohy (task) bude správa nasmerovaná. Tákúto distribúciu správ nazývame \textit{úplné zoskupenie} (angl. all grouping).
+%\newpage
+\myFrameBigFigure[]{images/IMG_impl-vseobecna}{Všeobecná topológia postavená na programovacom rámci Storm spolu s komunikačným systémom Kafka a kľúč-hodnota úložiskom Redis.}{impl-vseobecna}\label{fig:impl-vseobecna} 
+
+Je nutné pripomenúť, že všetky uzly v topológií bežia paralelne a často na viacerých fyzických strojoch v klastri, preto má napríklad distribúcia dopytov a správ veľký význam na optimálne fungovanie systému. Počiatočné nastavenie systému volíme také, že každý pracovník (worker) uzla grafu (pozn.: skrutky a pramene) beží z počiatku v štyroch vláknach (pozn.: v terminológií Storm vlákna predstavujú \textit{spúšťače}, angl. executors), kde jedno vlákno má najviac šesťdesiatštyri úloh. Tieto parametre sa pravdepodobne budú meniť s ladením topológie vo fáze experimentovania a overovania výkonnosti. Celé riešenie je implementované použitím inkrementálnych algoritmov. Algoritmus filtrovania správ vo filtračnom uzle topológie je zobrazený na tejto strane. 
+\\[5pt]
+Správy z Twittra prúdia vo formáte \textit{JSON}\footnote{JavaScript Object Notation: http://www.json.org/}, preto sme použili knižnicu JSON (org.json) na uľahčenie práce s objektami JSON (správami). Pri spracovaní prúdu priamo z Twitter API (pozn.: API znamená aplikačné programovacie rozhranie, angl. Application Programming Interface) je potrebné aplikáciu voči API autorizovať a pripojiť sa na verejný prúd. Na tento účel sme použili knižnicu \textit{Twitter4j}\footnote{Twitter4j: http://twitter4j.org/en/index.html}, ktorá poskytuje jednoduchú integráciu Twitter API do programovacieho jazyka Java. Na správu závislostí projektu Java sme použili široko používany nástroj Maven\footnote{Apache Maven: https://maven.apache.org/}, a na správu verzií projektu známy nástroj z unixu Git\footnote{Git: http://git-scm.com/}. 
+\\[10pt]
+% ====== ALGORITMUS FILTROVANIA ====== %
+\begin{algorithm}[H]
+ \KwData{Prúd n-tíc obsahujúci dvojice dopyt - \textit{používateľský dopyt}, hashtag - \textit{hastag, ktorý sa nachádza v texte správy}, tweet - \textit{správa resp. tweet}}
+ \KwResult{Vyfiltrované správy podľa dopytu}
+ inicializuj\;
+ \While{nie je koniec prúdu $n-tic$}{
+  načítaj(n-ticu)\;
+  \eIf{$n-tica$ je $dopyt$ používateľa}{
+   $dopyt$ = získajDopyt($n-tica$)\;
+   pridaj($vsetkyDopyty$, $dopyt$)\;
+   }{
+		$hashtag$ = získajHashtag($n-tica$)\;
+		$tweet$ = ziskajTweet($n-tica$)\;
+		\If{$hashtag$ je v množine $vsetkyDopyty$}{
+			časováPečiatka($tweet$,"filter-timestamp")\;
+			emituj($hashtag$,$tweet$)\;
+		}	
+  }
+  potvrďAck($n-tica$)\;
+ }
+ \caption{Filtračná časť topológie a príslušný algoritmus filtrovania podľa dopytu.}
+\end{algorithm}
 
 %\section{Vizualizácia}
 
 %\include{spracovanie}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,25 +1,104 @@
 \chapter{Existujúce riešenia modelov spracovania údajov}
 \label{Existing solutions of data stream analysis} 
-V tejto kapitole bližšie rozoberieme existujúce riešenia, ktoré sme analyzovali. Zamerali sme sa najmä na riešenia, ktoré nie sú proprietárne a čo najviac spĺňajú naše požiadavky na prúdové spracovanie údajov.
+V tejto kapitole bližšie rozoberieme existujúce riešenia, ktoré sme analyzovali. Zamerali sme sa najmä na riešenia, ktoré nie sú proprietárne. Existujúce riešenia je možné rozdeliť do dvoch skupín a to, dávkové a prúdove spracovanie údajov. 
 
-%%%%%%%%%%%%% DAVKOVE %%%%%%%%%%%%%
+%  ================= Davkove spracovanie  ================= %
 \section{Dávkové spracovanie}
-\paragraph{Apache Hadoop} je open-source implementácia MapReduce programovacieho modelu. Hadoop pozostáva z dvoch základných komponentov: \textit{Distribuovaný Súborový Systém Hadoop} (angl. Hadoop Distributed File System) a \textit{MapReduce programovacieho rámca} \citep{liu2014survey}.
+Analyzovali sme riešenia dávkového spracovania veľkého objemu údajov (angl. Big Data). Nástroje aplikujúce princípy dávkového spracovania pracujú väčšinou so statickou kolekciou dát. Tieto nástroje poskytujú možnosti spracovania a analýzy masívnych objemov dát, niektoré nástroje dovoľujú spracovať chybné a neúplné údaje. Spracovanie nie je v reálnom čase, výpočet je vykonávaný periodicky a trvá v závislosti na objeme korpusu rádovo sekundy, minúty, či hodiny a viac.
+
+%  ================= HADOOP  ================= %
+\subsection{Hadoop} 
+\label{hadoop-exists}
+Apache Hadoop\footnote{Apache Hadoop: https://hadoop.apache.org/} je populárna open source 
+%\footnote{Open-source je akákoľvek informácia dostupná širokej verejnosti, za predpokladu, že môže byť bez postihnutia šírená ďalej v pôvodnom alebo upravenom stave. To do akej mieri je možné open source upravovať často definuje licencia. Tento pojem vznikol z pri definovaní open source softvéru, dnes sa však už môže viazať na takmer čokoľvek.}
+implementácia MapReduce programovacieho modelu. Hadoop pozostáva z dvoch základných komponentov: Distribuovaný Súborový Systém Hadoop \textit{HDFS} (angl. Hadoop Distributed File System) a \textit{MapReduce} programovacieho rámca \citep{liu2014survey}. Obidva komponenty sú postavené na architektúre \textit{otrokár-otrok} (angl. master-slave). Hadoop program, alebo klient, odosiela \textit{prácu} (angl. job) cez \textit{stopovač práce} (angl. jobtracker), ktorý beží na serveri, do MapReduce rámca. Stopovač práce priraďuje úlohy \textit{stopovačovi úloh} (angl. tasktracker), ktorý beží na mnohých slave uzloch. Stopovač úloh posiela pravidelné \textit{správy}\footnote{Často nazývané údery srdca (angl. heartbeats) sú správy, ktoré informujú master uzol a stave slave uzlov a úloh.} informujúce stopovač práce o statuse jeho úloh, napríklad \textit{čakajúca}, \textit{činná}, \textit{zaneprázdnená}, atď. Ak vykonávaná úlohá zlyhá, vyprší časový limit alebo uzol, na ktorom je úloha vykonávaná, bude nejakých príčin bude vypnutý, stopovač úloh môže automaticky preplánovať úlohu na iné živé uzly v klastri. 
+  \\[5pt]
+ Ďalší komponent Hadoop HDFS (obr. 3.1) pozostáva z jedného menného uzla (angl. namenode) a viacerých \textit{dátových uzlov} (angl. datanode) Namenode udržuje metadáta dát udržovaných v dátových uzloch. Ak chce klientská aplikácia zapisovať alebo čítať z HDFS musí najprv komunikovať s namenode odkiaľ získa pozíciu dátového bloku, z ktorého môže čítať alebo zapisovať. Metadáta sú načítané do hlavnej pamäti pri štarte Hadoop-u. Dátové uzly, podobne ako stopovač úloh, aktualizujú stav menného uzla. 
+ \myFrameBigFigure[H]{images/IMG_existujuce-hadoop}{Hadoop distribuovaný súborový systém (HDFS) s replikáciou dát a klientom, ktorý číta niektoré dátové uzly.}{existujuce-hadoop}
+ \\[1pt]
+ Hadoop MapReduce rámec je navrhnutý s cieľom dosiahnuť horizontálnu škálovateľnosť a odolnosť voči chybám, ale nie je optimalizovaný pre rýchle vstupno/výstupné operácie. Odolnosť voči chybám je zabezpečená správnou implementáciou modelu MapReduce, o čom sme viac hovorili v podkapitole \ref{metody-davkove}. Problém MapReduce rámca je chýbajúce plánovanie vykonávania kvôli optimalizácií výpočtu a komunikácie v strapci. Aj v prípade efektívneho plánovania úloh a komunikácie naprieč strapcom je stále Hadoop systémom dávkového spracovania údajov kvôli jeho povahe spracovania dát.
+ 
+ %  ================= EasyBatch ================= %
+% \newpage
+\subsection{EasyBatch}
+EasyBatch\footnote{EasyBatch: http://www.easybatch.org/} je Java programovací rámec zameraný na zjednodušenie dávkového spracovania dát. Hlavný cieľ je zjednodušiť často používané operácie nad dátami ako napríklad čítanie, filtrovanie, parsovanie a validácia vstupných dát. EasyBatch môže bežať samostane alebo spustený na aplikačnom serveri. Rámec má niekoľko hlavných vlastností: \textit{jednoduchosť} (pozn.: jadro nemá žiadne závislosti, a preto zaberá málo miesta na disku ~ 80kB), \textit{POJO\footnote{Plain old Java Object je nijak obmedzený obyčajný Java objekt}} orientovaný vývoj, \textit{deklaratívna validácia dát}, \textit{generovanie reportov}, \textit{monitoring} dávkového spracovania, \textit{paralelné spracovanie}. Tento rámec je síce vytvorený na dávkové spracovanie dát, ale nie je horizontálne škálovateľný, aspoň nie v jeho podstate bez pridania externých programov a ďalšieho úsilia, narozdiel od Hadoop-u.
+
+ %  ================= misco ================= %
+\subsection{Misco}
+Distribuovaný programovací rámec Misco\footnote{Misco: http://alumni.cs.ucr.edu/~jdou/misco/} \citep{dou2010misco} je určený pre mobilné zariadenia. Rámec je implementovaný v programovacom jazyku Python vďaka čomu by ho malo byť jednoduché portovať na všetky platformy, ktoré podporujú tento jazyk a jeho knižnice na sieťovú komunikáciu. Je založený na MapReduce modeli, je potrebné programovať len funkcie Map a Reduce, o ostatné sa postará rámec, t. j. distribúcia kódu a dát, paralelné spracovanie, plánovanie a zlyhania uzlov. Misco systém pozostáva z hlavného serveru a viacerých klientských uzlov, na ktorých prebieha výpočet. Hlavný server zodpovedá za sledovanie stavu klientských uzlov, distribúciu dát, plánovanie a priraďovanie úloh. Klientské uzly sú, naopak, zodpovedné za to, aby si dopytovali úlohy na spracovanie od serveru vykonaním operácie nad dátami a vratením výsledku serveru. 
+
+ %  ================= Disco ================= %
+\subsection{Disco}
+Disco\footnote{Disco: http://discoproject.org/} je implementácia MapReduce modelu pre distribuované dávkové spracovanie. Disco podporuje paralelné spracovanie veľkých dátových korpusov. Jadro je napísané vo funkcionálnom jazyku Erlang, ktorý bol vytvorený na budovanie robustných distribuovaných aplikácií odolných voči chybám. Disco je postavený na otrokár-otrok (angl. master-slave) architektúre. \textit{Otrokár} (master) prijíma \textit{práce} (angl. jobs), ktoré distribuuje na vykonanie naprieč klastrom uzlov. \textit{Klienti} odosielajú \textit{práce} do hlavného uzla (otrokár). Podradené uzly (otrok) hlavnému uzlu sú ním tiež riadené a monitorované. V klastri Disco môže existovať viac hlavných uzlov.
 
 %%%%%%%%%%%%%% PRUDOVE %%%%%%%%%%%%
+%\newpage
 \section{Prúdové spracovanie}
-\paragraph{S4}
-Skratka S4 znamená \textit{Jednoduchý Škálovateľný Prúdový Systém} (angl. Simple Scalable Streaming System), tento systém je založený čiastočne na modely MapReduce. S4 je všeobecná, distribuovaná a škálovateľná platforma, ktorá je čiastočne odolná voči chybám. Napríklad, ak spracujúci uzol v topológií vypadne kvôli chybe, spracovanie je automaticky presunuté na iný uzol, ale stav toho uzla je stretený a nemôže byť obnovený \citep{neumeyer2010s4}. Tento systém nepoužíva zdieľanú pamäť a je založený na modeli Hráčov (angl. Actor model) \citep{agha1985actors}. S4 má decentralizovanú symetrickú architektúru, v ktorej sú všetky uzly na rovnakej úrovni (rozdiel oproti master-slave architektúre). Tieto uzly sú nazývané \textit{spracujúce elementy} (angl. processing elements, ďalej len PEs). S4 si vymieňa informácie medzi PEs vo forme dátových udalostí, čo je aj jediná možnosť interakcie a výmeny informácií medzi PEs. Strapec (angl. cluster) S4 pozostáva z PEs na spracovanie týchto udalostí. Vzhľadom na to, že dáta prúdia medzi PEs nie je potrebné ukladanie na disk. Z čoho tiež vyplýva, už spomenutá, čiastočná odolnosť voči chybám \citep{liu2014survey}. 
+Prúdové spracovanie v dnešnej dobe získava stále vyššiu pozornosť a záujem. Keďže sa v našej práci venujeme najmä prúdovému spracovaniu, v tejto časti analyzujeme viacero nástrojov vytvorených na spracovanie prúdu údajov.
 
-\paragraph{Spark}
-Spark \citep{Spark} clustrový výpočtový systém. Cieľom Spark-u je poskytnúť rýchlu výpočtovú platformu pre analýzu dát. Spark poskytuje všeobecný model výkonávania ľubovolných dopytov, ktoré sú výkonávané v pamäti. Takže opäť nie je potreba ukladať dáta počas spracovania na disk, čo by mohlo mať za následok nežiadúce spomalenie aplikácie. 
+ %  ================= S4 ================= %
+\subsection{S4}
+Skratka S4 znamená \textit{Jednoduchý Škálovateľný Prúdový Systém} (angl. \underline{S}imple \underline{S}calable \underline{S}treaming \underline{S}ystem, S4). Tento systém je založený sčasti na modeli MapReduce. S4 je všeobecná, distribuovaná a škálovateľná platforma, ktorá je \textit{čiastočne} odolná voči chybám. Napríklad, ak spracujúci uzol v topológií zlyhá kvôli chybe, spracovanie je automaticky presunuté na iný uzol, ale stav pôvodného uzla je stratený, a nemôže byť obnovený \citep{neumeyer2010s4}.
+ \\[5pt]
+Tento systém nepoužíva zdieľanú pamäť a je založený na modeli Hráčov (angl. Actor model) v kombinácií so spomenutým modelom MapReduce. S4 má decentralizovanú symetrickú architektúru, v ktorej sú všetky uzly na rovnakej úrovni (rozdiel oproti otrokár-otrok architektúre). Tieto uzly sú nazývané \textit{spracujúce elementy} (angl. processing elements, ďalej len PE). S4 si vymieňa informácie medzi PEs vo forme dátových udalostí, čo je aj jediná možnosť interakcie a výmeny informácií medzi PEs. Klaster (angl. cluster) S4 pozostáva z PEs na spracovanie týchto udalostí. Vzhľadom na to, že dáta prúdia medzi PEs a výpočet beží len v hlavnej pamäti PE, nie je potrebné ukladanie na disk. Z toho vyplýva už spomenutá, čiastočná odolnosť voči chybám. 
+ \\[5pt]
+Pretože v systéme neexistuje žiadny hlavný uzol (master), ktorý by sa staral o uzly, kde prebieha výpočet (slave), ale sú všetky uzly na rovnakej úrovni je potrebné zabezpečiť manažment klastra uzlov. Toto je mnohokrát vyriešené platformou ZooKeeper\footnote{ZooKeeper: https://zookeeper.apache.org/}. ZooKeeper je centralizovaná platforma na manažment distribuovaných aplikácií.
 
-\section{IBM InfoSphere Streams}
+ %  ================= Spark ================= %
+\subsection{Spark}
+Spark \citep{liu2014survey} je klastrový výpočtový systém. Kombinuje spracovanie uložených dát v dávkovom móde so spracovaním prúdu údajov v reálnom čase. Dávková čast Spark-u je postavená na Hadoop HDFS opísaná podrobnejšie v kapitole \ref{hadoop-exists} Hadoop.
+Cieľom Spark-u je poskytnúť rýchlu výpočtovú platformu pre analýzu dát. Spark poskytuje všeobecný model výkonávania ľubovolných dopytov, ktoré sú výkonávané v hlavnej pamäti (pokiaľ ide o prúdové spracovanie). Tento model je nazvaný \textit{Pružný distribuovaný dataset}, skr. RDD (angl. Resilient Distributed Dataset), čo je dátova abstrakcia distribuovanej pamäti. Keďže výpočet beží v hlavnej pamäti (pri prúdovom spracovaní), nie je potrebné vykonávať zápisy na disk, vďaka čomu môže byť dosiahnuté spracovanie v reálnom čase. Výpočet prebieha vo veľkom klastri uzlov s dosiahnutím odolnosti voči chybám za použitia RDD. RDD  sídli v hlavnej pamäti, ale môže byť periodicky ukladaný na disk. Vďaka distribuovanej povahe RDD môže byť stratená časť RDD obnovená z pamäti iného uzla. Samotné prúdové spracovanie nie je vykonávané správa po správe (angl. message by message), ale v mikro dávkach, ktoré môžu byť automaticky paralelne distrubované v strapci.
 
-\section{Storm}
-Strom je programovací rámec vytvorený na spracovanie prúdu dát. Je to open-source riešenie, ktoré poskytuje spracovanie prúdu dát s nízkou odozvou. Storm pozostáva z viacerých častí vrátane koordinátora (ZooKeeper), manažéra stavov (Nimbus) a spracovávajúcich uzlov (Supervisor). Implementuje model kde dáta neustále prúdia sieťou, tiež nazývanou topológiou uzlov a ústí. Topológia väčšinou záčína ústím a ďalej nasledujú len uzly, ktoré spracujú dáta a posielajú ich ďalej na spracovanie. Abstrakcia nad prúdiacimi údajmi sa v skratke nazýva \textit{prúd} \citep{liu2014survey}, čo je neohraničená sekvencia n-tíc.
+ %  ================= IBM InfoSphere streams ================= %
+ %doplnit infosphere streams, AK vyjde cas
+%\subsection{IBM InfoSphere Streams}
+
+ %  ================= Samza ================= %
+\subsection{Apache Samza}
+Apache Samza \citep{kamburugamuvesurvey} je programovací rámec pre prúdové spracovanie vyvinutý firmou LinkedIn\footnote{LinkedIn: https://www.linkedin.com/}. Prúd správ je neohraničená nemenná kolekcia správ rovnakého typu. Prúd môže byť čítaný viacerými konzumetami v systéme, a správy môžu byť pridávané alebo odstraňované z prúdu. Prúdy sú vždy udržiavané na úrovni \textit{dohadzovačov} (angl. broker). Práca (angl. job) je logická kolekcia výpočtových jednotiek alebo uzlov, ktoré spracujú prúd a vytvárajú výstupný prúd dát. Táto kolekcia vytvára sieťovú topológiu, ktorá spracuje správy. Prúdy su rozdeľované do pod prúdov, ktoré sú distribuované a spracované paralelne. Úloha predstavuje PE (processing element) v Samza rámci. Jedna úloha môže emitovať jeden výstupný prúd, ale na vstupe môže byť viacero vstupných prúdov. 
+\\[5pt]
+Distribuované plánovanie a prideľovanie prostriedkov sa spolieha na Apache Yarn\footnote{Apache Hadoop NextGen MapReduce (YARN): http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html}, o distribuované posielanie údajov sa stará Apache Kafka\footnote{Apache Kafka je publish-subscribe distribuovaný systém správ: http://kafka.apache.org/}. Architektúra Samza je zobrazená na obrázku 3.2.
+Klaster Samza uzlov je manažovaný Yarn-om. Systém je optimalizovaný pre spracovanie veľkého objemu správ a poskytuje možnosť ukladať správy na disk pre dávkové spracovanie. Samza využíva rozdeľovanie správ podľa tém (topic) systému Kafka na dosiahnutie distribuovaného rozdelenia prúdu v strapci. Uzol v Samza strapci môže konzumovať správy z Kafka komunikačného systému správ, ale tiež produkovať nový prúd správ do Kafka sprostredkovateľov. 
+\myFrameBigFigure[]{images/IMG_existujuce-samza}{Samza architektúra postavená na Apache Yarn a Apache Kafka, zdroj: \citep{kamburugamuvesurvey}.}{existujuce-samza}
+\\[5pt]
+Samza poskytuje garanciu a odolnosť voči chybám a doručenia správ \textit{aspoň raz} (angl. at least once). Ak nejaký uzol zlyhá, nastane preplánovanie úlohy do iného uzla, ktorý prevezme čítanie správ danej témy od sprostredkovateľa (sprostedkovateľ si udržuje zadefinovaný časový úsek správ). Keďže táto odolnosť voči chybám je dosiahnutá prostredníctvom Kafka sprostredkovateľov, ak nastane výpadok alebo chyba v sprostredkovateľoch, Samza stratí správy, ktoré nemôžu byť obnovené. Replikáciou súborového systému sprostredkovateľov je možné sa tomuto vyhnúť.
+
+ %  ================= STORM ================= %
+\subsection{Apache Storm}
+\label{existujuce-storm-subkap}
+Apache Strom\footnote{Apache Storm: https://storm.apache.org/} \citep{liu2014survey, kamburugamuvesurvey} je programovací rámec vytvorený na spracovanie prúdu dát. Je to open-source riešenie, ktoré poskytuje spracovanie prúdu dát s nízkou odozvou. Storm je navrhnutý aby poskytol odolnosť voči chybám (garancia doručenia správ), robustnosť a škálovateľnosť. 
+\\[5pt]
+Architektúra Storm-u zobrazená na obrázku 3.3 pozostáva z viacerých častí, koordinátora uzlov klastra ZooKeeper, manažérov stavov Nimbus\footnote{Nimbus: http://www.nimbusproject.org/} a spracovávajúcich uzlov Supervisor\footnote{Supervisor: http://supervisord.org/}. Nimbus je hlavný server, kde sa nahráva klientský kód na vykonanie. Tento kód je Nimbus-om distribuovaný v rámci \textit{pracovníkov} (workers) v strapci. Nimbus si tiež udržuje status všetkých pracovníkov, takže sa stará o prípadné reštarty alebo presun \textit{úloh} (task) v prípade zlyhania niektorého pracovníka. Množina pracovníkov v klastri Storm-u beží na pozadí ako démon Supervisor-a. ZooKeeper sa stará o koordináciu medzi uzlami Supervisor-a a hlavného servera Nimbus. Tok správ v systéme je zabezpečený komunikačným systémom správ ZeroMQ\footnote{ZeroMQ: http://zeromq.org/}.
+\myFrameBigFigure[]{images/IMG_existujuce-storm}{Zjednodušná architektúra Storm-u a jej komponenty, zdroj: https://storm.apache.org/documentation/Tutorial.html}{existujuce-storm} 
+\\[5pt]
+Storm nie je prispôsobený žiadnemu konkrétnemu programovaciemu modelu (napríklad MapReduce model). Programovací model Storm-u postkytuje distribuované rozdelenie prúdu medzi uzly. Tento model pozostáva zo \textit{skrutiek} (angl. bolt) a \textit{prameňov} (angl. spout), \textit{topológií} a \textit{prúdov}. Skrutky a pramene sú logicky spojené v orientovanom acyklickom grafe (skr. DAG, angl. directed acyclic graph). Vytvárajú tak určitú sieť uzlov nazývanú topológia. Používateľ odosiela vytvorené topológie hlavnému serveru klastra Storm, ktoré sa majú vykonať v klastri Storm. Abstrakcia nad prúdiacimi údajmi sa v skratke nazýva prúd, čo je neohraničená sekvencia n-tíc. Prúdy môžu byť definované používateľom (udalosti z Twittru) alebo systémové prúdy (hodinový signál). Skrutky konzumujú údaje a môžu ďalej emitovať nové prúdy po spracovaní n-tice na vstupe. Pramene len produkujú správy vo forme prúdu n-tíc. Topológia Storm-u väčšinou začína niekoľkými prameňmi a ďalej nasledujú len skrutky, ktoré spracujú prúd. Práca (job), ktorú poznáme z dávkových systémov, v Storm-e predstavuje Java objekt topológie, ktorý je odoslaný do hlavného servera Nimbus. Nimbus sa už postará o distribúciu a vykonanie topológie v rámci klastra. Na obrázku 3.4 je ukážka jednoduchej topológie postavenej na programovacom rámci Storm. 
+\myFrameBigFigure[]{images/IMG_existujuce-storm-2}{Ukážka topológie Storm-u}{existujuce-storm-2} 
+\\[5pt]
+Kód skrutiek môže byť vykonávaný vo viacerých úlohách pracovníka paralelne. Skrutky navzájom prepojené sú tiež vykonávané paralelne. Takto logicky prepojené skrutky si medzi sebou posielajú správy. Tieto správy musia prísť vždy do správnej úlohy v správnom vlákne, preto Storm zavádza pravidlá pre smerovanie správ medzi boltami. Presnejšie ide o to, ako budú správy zoskupované naprieč hranou medzi dvoma uzlami v grafe topológie. Správy môžu byť napríklad \textit{rovnomerne miešané} (angl. shuffle) medzi úlohami, vtedy väčšinou nezáleží na tom, ktorá skrutka spracuje ktorú správu. Niekedy je potrebné aby len konkrétna úloha vždy spracovala všetky správy obsahujúce nejaký atribút, alebo je žiadané replikovať správy do všetkých úloh. O toto sa tiež stará Storm implementáciou niekoľkých možností zoskupovania správ (angl. grouping) naprieč medzi uzlami. 
+\\[5pt]
+Odolnosť voči chybám je v Storm-e zabezpečená tak, že si každý uzol grafu drží výstupnú frontu správ. Správy vo fronte zostávajú, pokiaľ nie sú potvrdené (angl. acknowledged). Uzol ktorý správu spracuje ju potvrdzuje, po úspešnom spracovaní. V prípade, ak nepríde potvrdenie na správu, ktorá bola emitovaná do nejakého definovaného času, uzol preposiela správu znova. Tento mechanizmus je ohraničený len hlavnou pamäťou uzla, keďže Storm beží v hlavnej pamäti a posktyuje garanciu doručenia \textit{aspoň raz}. 
+\\[5pt]
+Zlyhania uzlov monitoruje hlavný server Nimbus, ktorý sa tiež stará o ich riešnie. Uzly supervisor-a posielajú pravidelné správy o svojom stave hlavnému serveru (heartbeats). Zlyhanie uzla a chyba správy sú dve ortogonálne udalosti, chyba alebo zlyhanie správy môže nastať chybou v sieti alebo chybou v softvéri. Manipulácia chybných správ a chybých uzlov preto prebieha úplne nezávisle odlišným spôsobom nezávisle od seba. Tento prístup robí systém ešte viac robustným.
+
+ %  ================= Zhodnotenie ================= %
+\section{Zhodnotenie existujúcich riešení}
+V súčasnosti existuje veľké množstvo nástrojov na spracovanie veľkých objemov údajov (angl. Big Data). Pre dávkové spracovanie Big Data sa dnes používa majoritne Hadoop, ostatné riešenia nie sú tak robustné a často používané ako práve Hadoop. Pre zjednodušenie práce s Hadoop existuje, naviac, mnoho rozšírení resp. úzko súvisiacich projektov (napr. Hive\footnote{Hive, dátové sklady poskytujúce sumarizáciu dát: http://hive.apache.org/}, HBase\footnote{HBase, podpora štruktúrovaných údajov pre veľké dátové súbory: http://hbase.apache.org/}, Mahout\footnote{Mahout, strojové učenia sa a dolovanie dát: http://mahout.apache.org/}, Apache Pig\footnote{Apache Pig, vysoko úrovňový jazyk pre paralelné počítanie: http://pig.apache.org/}). 
+Z množstva rôznych dostupných nástrojov na prúdové spracovanie je očividné, že v poslednej dobe zvyšuje vysokú pozornosť práve prúdové spracovanie. Na analýzu všetkých týchto nástrojov v tejto práci nie je priestor. 
+\\[5pt]
+Všetky nástroje pre prúdové spracovanie sú postavené na istej obdobe otrokár-otrok (angl. master-slave) architektúry. Niektoré sú odolné voči chybám a garantujú doručenie každej správy minimálne jedenkrát. Každé analyzované riešenie bolo distribuované a škálovateľné, čo je správnym predpokladom pre spracovanie veľkoobjemných a rýchlych nekonečných prúdov. Výpočtové uzly v klastri sú spájané  do logických celkov a predstavujú orientovaný acyklický graf, niekedy nazývaný topológia \citep{toshniwal2014storm}. Jeden nástroj, Apache Spark, je akýmsi hybridom, pretože je kombináciou možnosti pre dávkové aj prúdové spracovanie. 
+\\[5pt]
+Zo všetkých analyzovaných možností sme sa pre našu prácu rozhodli zvoliť nástroj Storm. Cieľom práce je vytvoriť riešenie na analúzu prúdu údajov, konkrétne filtrovanie podľa používateľského dopytu, a overiť výkonnosť nástroja, identifikovať prípadné problémy a navrhnúť ich riešenie. Storm spĺňa všetky požiadavky na prúdové spracovanie, ktoré sme si na začiatku stanovili a to hlavne, že riešenie musí byť distribuované, odolné voči chybám a horizontálne škálovateľné.
 
 
-\begin{shaded}
-***TODO: Porovnanie existujucich rieseni a odovodnenie preco som sa rozhodol prave pre storm***
-\end{shaded}
+
+
+
+
+
+
+
+
+
+
+
+

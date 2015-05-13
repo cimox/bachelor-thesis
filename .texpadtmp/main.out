@@ -1,0 +1,43 @@
+\BOOKMARK [0][-]{chapter.1}{\332vod}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Princ\355py spracovania \372dajov}{}% 2
+\BOOKMARK [1][-]{section.2.1}{D\341vkov\351 spracovanie d\341t}{chapter.2}% 3
+\BOOKMARK [2][-]{subsection.2.1.1}{Met\363dy d\341vkov\351ho spracovania}{section.2.1}% 4
+\BOOKMARK [1][-]{section.2.2}{Pr\372dov\351 spracovanie d\341t}{chapter.2}% 5
+\BOOKMARK [2][-]{subsection.2.2.1}{Vlastnosti pr\372du d\341t}{section.2.2}% 6
+\BOOKMARK [2][-]{subsection.2.2.2}{Model pr\372dov\351ho spracovania}{section.2.2}% 7
+\BOOKMARK [2][-]{subsection.2.2.3}{Dopytovanie sa do pr\372du d\341t}{section.2.2}% 8
+\BOOKMARK [2][-]{subsection.2.2.4}{Probl\351my a v\375zvy dolovania znalost\355 v pr\372doch}{section.2.2}% 9
+\BOOKMARK [0][-]{chapter.3}{Existuj\372ce rie\235enia modelov spracovania \372dajov}{}% 10
+\BOOKMARK [1][-]{section.3.1}{D\341vkov\351 spracovanie}{chapter.3}% 11
+\BOOKMARK [2][-]{subsection.3.1.1}{Hadoop}{section.3.1}% 12
+\BOOKMARK [2][-]{subsection.3.1.2}{EasyBatch}{section.3.1}% 13
+\BOOKMARK [2][-]{subsection.3.1.3}{Misco}{section.3.1}% 14
+\BOOKMARK [2][-]{subsection.3.1.4}{Disco}{section.3.1}% 15
+\BOOKMARK [1][-]{section.3.2}{Pr\372dov\351 spracovanie}{chapter.3}% 16
+\BOOKMARK [2][-]{subsection.3.2.1}{S4}{section.3.2}% 17
+\BOOKMARK [2][-]{subsection.3.2.2}{Spark}{section.3.2}% 18
+\BOOKMARK [2][-]{subsection.3.2.3}{Apache Samza}{section.3.2}% 19
+\BOOKMARK [2][-]{subsection.3.2.4}{Apache Storm}{section.3.2}% 20
+\BOOKMARK [1][-]{section.3.3}{Zhodnotenie existuj\372cich rie\235en\355}{chapter.3}% 21
+\BOOKMARK [0][-]{chapter.4}{N\341vrh rie\235enia}{}% 22
+\BOOKMARK [1][-]{section.4.1}{Po\236iadavky na rie\235enie}{chapter.4}% 23
+\BOOKMARK [1][-]{section.4.2}{V\235eobecn\375 n\341vrh}{chapter.4}% 24
+\BOOKMARK [2][-]{subsection.4.2.1}{Predspracovanie vstupn\375ch \372dajov}{section.4.2}% 25
+\BOOKMARK [2][-]{subsection.4.2.2}{Spracovanie v re\341lnom case}{section.4.2}% 26
+\BOOKMARK [2][-]{subsection.4.2.3}{Postpracovanie v\375sledku}{section.4.2}% 27
+\BOOKMARK [1][-]{section.4.3}{Implement\341cia a pou\236it\351 technol\363gie}{chapter.4}% 28
+\BOOKMARK [0][-]{chapter.5}{Experimenty}{}% 29
+\BOOKMARK [1][-]{section.5.1}{Metodol\363gia overovania}{chapter.5}% 30
+\BOOKMARK [1][-]{section.5.2}{Filtrovanie prednastaven\375m filtrom}{chapter.5}% 31
+\BOOKMARK [1][-]{section.5.3}{Filtrovanie viacer\375mi dopytmi}{chapter.5}% 32
+\BOOKMARK [1][-]{section.5.4}{Smerovanie spr\341v na z\341klade dopytu}{chapter.5}% 33
+\BOOKMARK [1][-]{section.5.5}{Zhodnotenie}{chapter.5}% 34
+\BOOKMARK [0][-]{chapter.6}{Zhodnotenie a bud\372ca pr\341ca}{}% 35
+\BOOKMARK [0][-]{section*.31}{Literat\372ra}{}% 36
+\BOOKMARK [0][-]{appendix*.33}{Pr\355lohy}{}% 37
+\BOOKMARK [1][-]{section.Alph0.1}{Technick\341 dokument\341cia}{appendix*.33}% 38
+\BOOKMARK [1][-]{section.Alph0.2}{In\235talacn\341 a pou\236\355vatelsk\341 pr\355rucka}{appendix*.33}% 39
+\BOOKMARK [1][-]{section.Alph0.3}{Grafy}{appendix*.33}% 40
+\BOOKMARK [2][-]{subsection.Alph0.3.1}{Filtrovanie viacer\375mi dopytmi}{section.Alph0.3}% 41
+\BOOKMARK [2][-]{subsection.Alph0.3.2}{Smerovanie spr\341v na z\341klade dopytu}{section.Alph0.3}% 42
+\BOOKMARK [1][-]{section.Alph0.4}{Obsah elektronick\351ho m\351dia}{appendix*.33}% 43

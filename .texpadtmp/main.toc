@@ -1,0 +1,47 @@
+\select@language {slovak}
+\contentsline {chapter}{\numberline {1}\IeC {\'U}vod}{1}{chapter.1}
+\contentsline {chapter}{\numberline {2}Princ\IeC {\'\i }py spracovania \IeC {\'u}dajov}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}D\IeC {\'a}vkov\IeC {\'e} spracovanie d\IeC {\'a}t}{5}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}Met\IeC {\'o}dy d\IeC {\'a}vkov\IeC {\'e}ho spracovania}{8}{subsection.2.1.1}
+\contentsline {paragraph}{MapReduce}{8}{paragraph*.6}
+\contentsline {paragraph}{D\IeC {\'a}tov\IeC {\'e} kocky}{9}{paragraph*.8}
+\contentsline {paragraph}{Hviezdicov\IeC {\'a} sch\IeC {\'e}ma}{10}{paragraph*.9}
+\contentsline {section}{\numberline {2.2}Pr\IeC {\'u}dov\IeC {\'e} spracovanie d\IeC {\'a}t}{10}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Vlastnosti pr\IeC {\'u}du d\IeC {\'a}t}{12}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Model pr\IeC {\'u}dov\IeC {\'e}ho spracovania}{14}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}Dopytovanie sa do pr\IeC {\'u}du d\IeC {\'a}t}{15}{subsection.2.2.3}
+\contentsline {subsection}{\numberline {2.2.4}Probl\IeC {\'e}my a v\IeC {\'y}zvy dolovania znalost\IeC {\'\i } v pr\IeC {\'u}doch}{17}{subsection.2.2.4}
+\contentsline {chapter}{\numberline {3}Existuj\IeC {\'u}ce rie\IeC {\v s}enia modelov spracovania \IeC {\'u}dajov}{19}{chapter.3}
+\contentsline {section}{\numberline {3.1}D\IeC {\'a}vkov\IeC {\'e} spracovanie}{19}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Hadoop}{19}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}EasyBatch}{21}{subsection.3.1.2}
+\contentsline {subsection}{\numberline {3.1.3}Misco}{21}{subsection.3.1.3}
+\contentsline {subsection}{\numberline {3.1.4}Disco}{22}{subsection.3.1.4}
+\contentsline {section}{\numberline {3.2}Pr\IeC {\'u}dov\IeC {\'e} spracovanie}{22}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}S4}{22}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Spark}{23}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Apache Samza}{24}{subsection.3.2.3}
+\contentsline {subsection}{\numberline {3.2.4}Apache Storm}{25}{subsection.3.2.4}
+\contentsline {section}{\numberline {3.3}Zhodnotenie existuj\IeC {\'u}cich rie\IeC {\v s}en\IeC {\'\i }}{28}{section.3.3}
+\contentsline {chapter}{\numberline {4}N\IeC {\'a}vrh rie\IeC {\v s}enia}{29}{chapter.4}
+\contentsline {section}{\numberline {4.1}Po\IeC {\v z}iadavky na rie\IeC {\v s}enie}{29}{section.4.1}
+\contentsline {section}{\numberline {4.2}V\IeC {\v s}eobecn\IeC {\'y} n\IeC {\'a}vrh}{30}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Predspracovanie vstupn\IeC {\'y}ch \IeC {\'u}dajov}{31}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Spracovanie v re\IeC {\'a}lnom \IeC {\v c}ase}{32}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Postpracovanie v\IeC {\'y}sledku}{33}{subsection.4.2.3}
+\contentsline {section}{\numberline {4.3}Implement\IeC {\'a}cia a pou\IeC {\v z}it\IeC {\'e} technol\IeC {\'o}gie}{34}{section.4.3}
+\contentsline {chapter}{\numberline {5}Experimenty}{37}{chapter.5}
+\contentsline {section}{\numberline {5.1}Metodol\IeC {\'o}gia overovania}{37}{section.5.1}
+\contentsline {section}{\numberline {5.2}Filtrovanie prednastaven\IeC {\'y}m filtrom}{40}{section.5.2}
+\contentsline {section}{\numberline {5.3}Filtrovanie viacer\IeC {\'y}mi dopytmi}{43}{section.5.3}
+\contentsline {section}{\numberline {5.4}Smerovanie spr\IeC {\'a}v na z\IeC {\'a}klade dopytu}{46}{section.5.4}
+\contentsline {section}{\numberline {5.5}Zhodnotenie}{48}{section.5.5}
+\contentsline {chapter}{\numberline {6}Zhodnotenie a bud\IeC {\'u}ca pr\IeC {\'a}ca}{49}{chapter.6}
+\contentsline {chapter}{\numberline {}Literat\IeC {\'u}ra}{51}{section*.31}
+\contentsline {chapter}{Pr\IeC {\'\i }lohy}{55}{appendix*.33}
+\contentsline {section}{\numberline {A}Technick\IeC {\'a} dokument\IeC {\'a}cia}{55}{section.Alph0.1}
+\contentsline {section}{\numberline {B}In\IeC {\v s}tala\IeC {\v c}n\IeC {\'a} a pou\IeC {\v z}\IeC {\'\i }vate\IeC {\v l}sk\IeC {\'a} pr\IeC {\'\i }ru\IeC {\v c}ka}{58}{section.Alph0.2}
+\contentsline {section}{\numberline {C}Grafy}{59}{section.Alph0.3}
+\contentsline {subsection}{\numberline {C.1}Filtrovanie viacer\IeC {\'y}mi dopytmi}{59}{subsection.Alph0.3.1}
+\contentsline {subsection}{\numberline {C.2}Smerovanie spr\IeC {\'a}v na z\IeC {\'a}klade dopytu}{61}{subsection.Alph0.3.2}
+\contentsline {section}{\numberline {D}Obsah elektronick\IeC {\'e}ho m\IeC {\'e}dia}{63}{section.Alph0.4}
