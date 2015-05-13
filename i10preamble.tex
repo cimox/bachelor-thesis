@@ -1,204 +1,27 @@
 %!TEX root = ./main.tex
 
-% This file is part of the i10 thesis template developed and used by the
-% Media Computing Group at RWTH Aachen University.
-% The current version of this template can be obtained at
-% <http://www.media.informatik.rwth-aachen.de/karrer.html>.
-
-
-
-%-----------------------------------------------------------------------------------------------------------------------------------------
-% Befehle
-% commands
-%-----------------------------------------------------------------------------------------------------------------------------------------
-
-%----------------------------------------------------------------------------------
-% \myBigFigure	[ LABEL_PREFIX (optional) ]
-%				{ FILENAME (without extension) }
-%				{ CAPTION TEXT }
-%				{ SHORT VERSION OF CAPTION TEXT }
-%
-%Bild wird in kompletter Breite gesetzt, die Kurzversion der Bildunterschrift erscheint im Abbildungsverzeichnis
-%picture using full width of the page, the short caption is what appears in the list of figures index
-
-%----------------------------------------------------------------------------------
-% \myFrameBigFigure	[ LABEL_PREFIX (optional) ]
-%					{ FILENAME (without extension) }
-%					{ CAPTION TEXT }
-%					{ SHORT VERSION OF CAPTION TEXT }
-%
-%Bild wird in kompletter Breite gesetzt und eingerahmt, die Kurzversion der Bildunterschrift erscheint im Abbildungsverzeichnis
-%picture with frame using the full width of the page, the short caption is what appears in the list of figures index
-
-%----------------------------------------------------------------------------------
-% \myHUGEFigure	[ LABEL_PREFIX (optional) ]
-%				{ FILENAME (without extension) }
-%				{ CAPTION TEXT }
-%				{ SHORT VERSION OF CAPTION TEXT }
-%
-%Bild wird rotiert und quer in kompletter Breite gesetzt, die Kurzversion der Bildunterschrift erscheint im Abbildungsverzeichnis
-%landscape picture using the full width of the rotated page, the short caption is what appears in the list of figures index
-
-%----------------------------------------------------------------------------------
-% \myFigure	[ LABEL_PREFIX (optional) ]
-%			{ FILENAME (without extension) }
-%			{ CAPTION TEXT }
-%			{ SHORT VERSION OF CAPTION TEXT }
-%
-%Bild wird in der Breite der textspalte gesetzt, die Kurzversion der Bildunterschrift erscheint im Abbildungsverzeichnis
-%picture using the width of the text column, the short caption is what appears in the list of figures index
-
-%----------------------------------------------------------------------------------
-% \myImgRef	[ LABEL_PREFIX (optional) ]
-%			{ LABEL OF THE IMAGE }
-%
-%referenziert das angegebene Bild
-%reference to an image
-
-%----------------------------------------------------------------------------------
-% \myBigTable	{ YOUR TABULAR DEFINITION }
-%			{ CAPTION TEXT }
-%			{ TABLE_LABLE }
-%
-%Tabelle wird in kompletter Breite gesetzt
-%table using the full width of the page
-
-%----------------------------------------------------------------------------------
-% \myTable	{ YOUR TABULAR DEFINITION }
-%			{ CAPTION TEXT }
-%			{ TABLE_LABLE }
-%
-%Tabelle wird in der Breite der Textspalte gesetzt
-%table using the width of the text column
-
-%----------------------------------------------------------------------------------
-% \myTxtRef	{ LABLE }
-%
-%Referenz auf Kapitel oder Abschnitte - gibt nummer und namen aus, z.B.: 5.3---"Yaddahyaddah"
-%references chapters or sections, outputs number and title, e.g., 5.3---"Yaddahyaddah"
-
-%----------------------------------------------------------------------------------
-% \myUnderscore
-%
-%Setzt einen "schnen" Unterstrich fr URLs
-%typesets a 'nice' underscore for URLs
-
-%----------------------------------------------------------------------------------
-%\myTilde
-%
-%Setzt eine "schne" Tilde fr URLs
-%typesets a 'nice' tilde for URLs
-
-%----------------------------------------------------------------------------------
-% \myURL	{ TYPESET VERSION OF ANCHOR }
-%			{ PRISTINE URL }
-%			{ TYPESET VERSION OF URL }
-%
-%Setzt eine URL
-%die typographisch "schne" version erscheint in einer Fu§note,
-%im Text erscheint der Ankertext, verlinkt ist die "echte" URL
-%typesets a URL
-%the typographically correct version appears as a footnote,
-%the anchor appears in the text, the link points to the pristine URL
-
-%----------------------------------------------------------------------------------
-% \mySimpleURL	{ TYPESET VERSION OF ANCHOR }
-%				{ PRISTINE URL }
-%
-%Setzt eine URL
-%die URL erscheint in einer Fu§note,
-%im Text erscheint der Ankertext, die URL ist verlinkt
-%typesets a URL
-%the URL appears as a footnote,
-%the anchor appears in the text, the link points to the URL
-
-%----------------------------------------------------------------------------------
-% \myProjectURL	{ TYPESET VERSION OF ANCHOR }
-%				{ PRISTINE URL INSIDE PROJECT DIRECTORY }
-%				{ TYPESET VERSION OF URL INSIDE PROJECT DIRECTORY }
-%
-%Setzt eine URL innerhalb des Projektverzeichnisses auf "media"
-%ACCOUNT muss durch den eigenen Usernamen ersetzt werden
-%die typographisch "schne" version erscheint in einer Fu§note,
-%im Text erscheint der Ankertext, verlinkt ist die "echte" URL
-%typesets a URL inside the project directory on 'media'
-%replace ACCOUNT with your username
-%the typographically correct version appears as a footnote,
-%the anchor appears in the text, the link points to the pristine URL
-
-%----------------------------------------------------------------------------------
-% \mnote	{ MARGIN NOTE }
-%
-%Setzt eine Randnotitz
-%puts a comment into the margin in small sans-serif font
-
-%----------------------------------------------------------------------------------
-% \todo	{ TODO MARGIN NOTE }
-%
-%Setzt eine "ToDo"-Randnotitz in rot zur Erinnerung
-%puts a 'todo' comment into the margin in red
-
-%----------------------------------------------------------------------------------
-% \chapterquote	{ QUOTATION }
-%				{ SOURCE }
-%
-%Setzt ein Zitat zum Einleiten eines Kapitels
-%outputs a quote with its source, can be used as an introduction to chapters
-
-%----------------------------------------------------------------------------------
-% \myDefBox	{ TERM }
-%			{ DEFINITION }
-%
-%Setzt eine Randnotitz und eine farbige Box (Textspaltenbreite),
-%welche einen Begriff und seine Definition enthlt
-%outputs a margin note and a colored box (width of the text column) containing a term and its definition
-
-%----------------------------------------------------------------------------------
-% \myBigDefBox	{ TERM }
-%				{ DEFINITION }
-%
-%Setzt eine farbige Box (Seitenbreite), welche einen Begriff und seine Definition enthlt
-%outputs a colored box (width of the page) containing a term and its definition
-
-%----------------------------------------------------------------------------------
-% \myDownloadURL	{ TYPESET DOWNLOAD NAME }
-%					{ PRISTINE VERSION OF FILENAME }
-%					{ TYPESET VERSION OF FILENAME }
-%
-%Setzt eine farbige Box, welche einen Downloadlink enthlt
-%outputs a colored box containing a download link
-
-%----------------------------------------------------------------------------------
-% \emptydoublepage
-%
-% Leere Doppelseite ohne Kopf- oder Fu§zeile am Ende von Kapiteln
-% Clear double page without any header or footer at end of chapters
-
-%----------------------------------------------------------------------------------
-% \pagebreak	[ SOME STRANGE LATEX VALUE ]
-%
-%Eklige pagebreaks fr den Druck (falls es nicht mehr anders geht)
-%pagebreaks for the final print version (last resort weapon against wrong pagebreaks by LaTeX)
-
-%----------------------------------------------------------------------------------
-% \TM
-%
-%Setzt ein (TM) Symbol
-%Places a (TM) symbol
-
-
 %----------------------------------------------------------------------------------
 %Packages and parameters
 %----------------------------------------------------------------------------------
 
 %inputencoding for the mac
+%\documentclass[slovak]{article}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[slovak,english]{babel}
+\usepackage{babel}
+
+% =========== OLD SETTINGS =========== %
+%\usepackage[utf8]{inputenc}
+%\usepackage[slovak,english]{babel}
+% ================================== %
 
 %packages for mathematical symbols
 \usepackage{latexsym}
 \usepackage{amsmath}
+\usepackage{mathtools}
 \usepackage{amssymb}
+
+\usepackage{pdfpages}
 
 % removes 'chapter' word from titles and apply own style
 \usepackage{titlesec}
@@ -212,6 +35,7 @@
 
 %path to your image folder
 \graphicspath{{images/}}
+\usepackage{float} % package for floating images in text
 
 %do not indent at new paragraphs but add a vertical offset
 \usepackage{noindent}
@@ -221,7 +45,8 @@
 
 %bibliography settings
 \usepackage{natbib}
-\bibliographystyle{apalike}
+\bibliographystyle{apalike} %harvad style
+%\bibliographystyle{ieeepes}
 
 %source code listings
 \usepackage{color}
@@ -244,6 +69,13 @@
 \usepackage{setspace}
 %\doublespacing
 \onehalfspacing
+
+\usepackage[]{algorithm2e}
+
+% change images numbering to per subsection
+%\usepackage{chngcntr}
+%\counterwithin{figure}{section}
+%\counterwithin{table}{section}
 
 
 %package for control structures
@@ -282,6 +114,10 @@
 % Right headings: "1.1  Basics"
 \renewcommand{\sectionmark}[1]{%
 \markright{\thesection\ \ \ \ #1}{}}
+
+
+% ZMENA TABULKA ======
+\renewcommand{\tablename}{Tabuľka}
 
 % some Fancyhdr problem...
 \addtolength{\headheight}{2pt} % To avoid overfull vboxes from fancyhdr
@@ -447,7 +283,6 @@
 %-----------------------------------------------------------------------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------------
-\renewcommand{\figurename}{Obrázok}
 
 % \myBigFigure	[ LABEL_PREFIX (optional) ]
 %				{ FILENAME (without extension) }
@@ -458,7 +293,9 @@
 %picture using full width of the page
 \newcommand{\myBigFigure}[4][image]
 {%
-\begin{figure}[t!bp]%
+\begin{figure}[ht!bp]%
+%\begin{figure}[H]%
+	\renewcommand{\figurename}{Obrázok}
 	\checkoddpage%
 	\ifcpoddpage%
 		%nothing
@@ -485,7 +322,9 @@
 %picture with frame using the full width of the page
 \newcommand{\myFrameBigFigure}[4][image]
 {
-\begin{figure}[t!bp]
+\begin{figure}[ht!bp]
+%\begin{figure}[H]
+	\renewcommand{\figurename}{Obrázok}
 	\checkoddpage
 	\ifcpoddpage
 		%nothing
@@ -537,16 +376,19 @@
 %
 %Bild wird in der Breite der textspalte gesetzt
 %picture using the width of the text column
-\newcommand{\myFigure}[4][image]%
+\newcommand{\myFigure}[6][image]%
 {%
-\begin{figure}[t!bp]%
+%\scalebox{0.5}{
+\begin{figure}[#6]%
+	\renewcommand{\figurename}{Obrázok}
 	\begin{center}%
-		\includegraphics[width= \textwidth]{#2}%
+		\includegraphics[scale=#5]{#2}%
 		\caption[#4]{#3}
 		\label{#1_#2}%
 	\end{center}%
 \end{figure}%
 }%
+
 
 %----------------------------------------------------------------------------------
 % \myImgRef	[ LABEL_PREFIX (optional) ]
@@ -804,6 +646,7 @@
 % Leere Doppelseite ohne Kopf- oder Fu§zeile am Ende von Kapiteln
 % Clear double page without any header or footer at end of chapters
 \newcommand{\emptydoublepage}{\clearpage\thispagestyle{empty}\cleardoublepage}
+\newcommand{\emptysinglepage}{\clearpage\thispagestyle{empty}\clearpage}
 
 %----------------------------------------------------------------------------------
 % \pagebreak	[ SOME STRANGE LATEX VALUE ]

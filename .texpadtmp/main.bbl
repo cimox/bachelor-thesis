@@ -1,0 +1,145 @@
+\begin{thebibliography}{}
+
+\bibitem[Aggarwal, 2007]{aggarwal2007data}
+Aggarwal, C.~C. (2007).
+\newblock {\em Data streams: models and algorithms}, volume~31.
+\newblock Springer Science \& Business Media.
+
+\bibitem[Babcock et~al., 2002]{babcock2002models}
+Babcock, B., Babu, S., Datar, M., Motwani, R., and Widom, J. (2002).
+\newblock Models and issues in data stream systems.
+\newblock In {\em Proceedings of the twenty-first ACM SIGMOD-SIGACT-SIGART
+  symposium on Principles of database systems}, pages 1--16. ACM.
+
+\bibitem[Babu and Widom, 2001]{babu2001continuous}
+Babu, S. and Widom, J. (2001).
+\newblock Continuous queries over data streams.
+\newblock {\em ACM Sigmod Record}, 30(3):109--120.
+
+\bibitem[Chaudhuri and Dayal, 1997]{chaudhuri1997overview}
+Chaudhuri, S. and Dayal, U. (1997).
+\newblock An overview of data warehousing and olap technology.
+\newblock {\em ACM Sigmod record}, 26(1):65--74.
+
+\bibitem[Dean and Ghemawat, 2008]{Dean2008}
+Dean, J. and Ghemawat, S. (2008).
+\newblock {MapReduce : Simplified Data Processing on Large Clusters}.
+\newblock 51(1):107--113.
+
+\bibitem[Dong and Srivastava, 2013]{dong2013big}
+Dong, X.~L. and Srivastava, D. (2013).
+\newblock Big data integration.
+\newblock In {\em Data Engineering (ICDE), 2013 IEEE 29th International
+  Conference on}, pages 1245--1248. IEEE.
+
+\bibitem[Dou et~al., 2010]{dou2010misco}
+Dou, A., Kalogeraki, V., Gunopulos, D., Mielikainen, T., and Tuulos, V.~H.
+  (2010).
+\newblock Misco: a mapreduce framework for mobile systems.
+\newblock In {\em Proceedings of the 3rd international conference on pervasive
+  technologies related to assistive environments}, page~32. ACM.
+
+\bibitem[Franek, 2013]{franekimporty}
+Franek, B.~L. (2013).
+\newblock Importy dat z rela{\v{c}}n{\'\i} datab{\'a}ze do olap datov{\`y}ch
+  kostek.
+
+\bibitem[Higginbotham, 2010]{boeing}
+Higginbotham, S. (2010).
+\newblock Sensor networks top social networks for big data.
+\newblock [Online; zverejnené 13-September-2010].
+
+\bibitem[Hwang et~al., 2005]{hwang2005high}
+Hwang, J.-H., Balazinska, M., Rasin, A., Cetintemel, U., Stonebraker, M., and
+  Zdonik, S. (2005).
+\newblock High-availability algorithms for distributed stream processing.
+\newblock In {\em Data Engineering, 2005. ICDE 2005. Proceedings. 21st
+  International Conference on}, pages 779--790. IEEE.
+
+\bibitem[Kaisler et~al., 2013]{kaisler2013big}
+Kaisler, S., Armour, F., Espinosa, J.~A., and Money, W. (2013).
+\newblock Big data: Issues and challenges moving forward.
+\newblock In {\em System Sciences (HICSS), 2013 46th Hawaii International
+  Conference on}, pages 995--1004. IEEE.
+
+\bibitem[Kamburugamuve et~al., 2013]{kamburugamuvesurvey}
+Kamburugamuve, S., Fox, G., Leake, D., and Qiu, J. (2013).
+\newblock Survey of distributed stream processing for large stream sources.
+\newblock Technical report, Technická správa. 2013. Dostupné na URL:
+  http://grids.ucs.indiana.edu/ptliupages/publications/survey\_stream\_processing.pdf.
+
+\bibitem[Kreps et~al., 2011]{kreps2011kafka}
+Kreps, J., Narkhede, N., Rao, J., et~al. (2011).
+\newblock Kafka: A distributed messaging system for log processing.
+\newblock In {\em Proceedings of 6th International Workshop on Networking Meets
+  Databases (NetDB), Athens, Greece}.
+
+\bibitem[Liu et~al., 2014]{liu2014survey}
+Liu, X., Iftikhar, N., and Xie, X. (2014).
+\newblock Survey of real-time processing systems for big data.
+\newblock In {\em Proceedings of the 18th International Database Engineering \&
+  Applications Symposium}, pages 356--361. ACM.
+
+\bibitem[Marz and Warren, 2013]{marz2013big}
+Marz, N. and Warren, J. (2013).
+\newblock {\em Big Data: Principles and best practices of scalable realtime
+  data systems}.
+\newblock O'Reilly Media.
+
+\bibitem[Mathioudakis and Koudas, 2010]{mathioudakis2010twittermonitor}
+Mathioudakis, M. and Koudas, N. (2010).
+\newblock Twittermonitor: trend detection over the twitter stream.
+\newblock In {\em Proceedings of the 2010 ACM SIGMOD International Conference
+  on Management of data}, pages 1155--1158. ACM.
+
+\bibitem[Neumeyer et~al., 2010]{neumeyer2010s4}
+Neumeyer, L., Robbins, B., Nair, A., and Kesari, A. (2010).
+\newblock S4: Distributed stream computing platform.
+\newblock In {\em Data Mining Workshops (ICDMW), 2010 IEEE International
+  Conference on}, pages 170--177. IEEE.
+
+\bibitem[Silvestri, 2006]{silvestri2006distributed}
+Silvestri, C. (2006).
+\newblock Distributed and stream data mining algorithms for frequent pattern
+  discovery.
+
+\bibitem[Stankovic et~al., 1999]{stankovic1999misconceptions}
+Stankovic, J.~A., Son, S.~H., and Hansson, J. (1999).
+\newblock Misconceptions about real-time databases.
+\newblock {\em Computer}, 32(6):29--36.
+
+\bibitem[Stonebraker et~al., 2005]{stonebraker20058}
+Stonebraker, M., {\c{C}}etintemel, U., and Zdonik, S. (2005).
+\newblock The 8 requirements of real-time stream processing.
+\newblock {\em ACM SIGMOD Record}, 34(4):42--47.
+
+\bibitem[Terry et~al., 1992]{terry1992continuous}
+Terry, D., Goldberg, D., Nichols, D., and Oki, B. (1992).
+\newblock {\em Continuous queries over append-only databases}, volume~21.
+\newblock ACM.
+
+\bibitem[Toshniwal et~al., 2014]{toshniwal2014storm}
+Toshniwal, A., Taneja, S., Shukla, A., Ramasamy, K., Patel, J.~M., Kulkarni,
+  S., Jackson, J., Gade, K., Fu, M., Donham, J., et~al. (2014).
+\newblock Storm@ twitter.
+\newblock In {\em Proceedings of the 2014 ACM SIGMOD international conference
+  on Management of data}, pages 147--156. ACM.
+
+\bibitem[Wu et~al., 2014]{wu2014data}
+Wu, X., Zhu, X., Wu, G.-Q., and Ding, W. (2014).
+\newblock Data mining with big data.
+\newblock {\em Knowledge and Data Engineering, IEEE Transactions on},
+  26(1):97--107.
+
+\bibitem[Zaslavsky et~al., 2013]{zaslavsky2013sensing}
+Zaslavsky, A., Perera, C., and Georgakopoulos, D. (2013).
+\newblock Sensing as a service and big data.
+\newblock {\em arXiv preprint arXiv:1301.0159}.
+
+\bibitem[Zikopoulos et~al., 2011]{zikopoulos2011understanding}
+Zikopoulos, P., Eaton, C., et~al. (2011).
+\newblock {\em Understanding big data: Analytics for enterprise class hadoop
+  and streaming data}.
+\newblock McGraw-Hill Osborne Media.
+
+\end{thebibliography}
